@@ -14,9 +14,10 @@ public class VerificarEspecialidadVendedorUseCase {
         if (vendedor == null) {
             throw new ReglaDominioException("Debe indicarse un vendedor para verificar.");
         }
-        // por ahora esto es casi automático, pero en la vida real aquí iría
-        // la validación de certificados/portafolio antes de aprobar
+        if (vendedor.isVerificado()) {
+            throw new ReglaDominioException("Este vendedor ya se encuentra verificado.");
+        }
         vendedor.verificarEspecialidad();
-        // falta guardar el vendedor ya verificado
+
     }
 }
