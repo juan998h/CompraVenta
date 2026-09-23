@@ -1,24 +1,28 @@
 package com.uniquindio.CompraVenta.application.usecase;
 
+import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.entity.VendedorEspecializado;
-import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
+import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
+import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
+
+import java.math.BigDecimal;
 
 /**
- * Caso de uso: Verificar Especialidad del Vendedor.
+ * Caso de uso: Publicar Repuesto.
+ * Un VendedorEspecializado publica un nuevo Repuesto en el catálogo.
+ *
+ * Reglas de negocio que aplica:
+ * - El repuesto debe declarar compatibilidad con al menos un modelo (Repuesto lo valida en su constructor).
+ * - TODO: si la categoría es de alto riesgo, exigir vendedor.puedePublicarEnCategoriaAltoRiesgo().
  */
-public class VerificarEspecialidadVendedorUseCase {
+public class PublicarRepuestoUseCase {
 
-    // TODO: inyectar VendedorRepository para persistir el cambio de estado
+    // TODO: inyectar RepuestoRepository
 
-    public void ejecutar(VendedorEspecializado vendedor) {
-        if (vendedor == null) {
-            throw new ReglaDominioException("Debe indicarse un vendedor para verificar.");
-        }
-        if (vendedor.isVerificado()) {
-            throw new ReglaDominioException("Este vendedor ya se encuentra verificado.");
-        }
-        // TODO: validar credenciales reales (certificado, portafolio, etc.) antes de verificar
-        vendedor.verificarEspecialidad();
-        // TODO: guardar el vendedor actualizado a través del repositorio
+    public Repuesto ejecutar(VendedorEspecializado vendedor, String nombre, BigDecimal precio,
+                             Compatibilidad compatibilidad, Garantia garantia) {
+        Repuesto repuesto = new Repuesto(nombre, precio, compatibilidad, garantia);
+        // TODO: guardar el repuesto a través del repositorio
+        return repuesto;
     }
 }
