@@ -1,15 +1,13 @@
 package com.uniquindio.CompraVenta.domain.valueobject;
 
-import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
+import java.util.List;
 
-public record Modelo(String marca, String version, int anio, Cilindraje cilindraje) {
+public record Compatibilidad(List<Modelo> modelosCompatibles) {
 
-    public Modelo {
-        if (marca == null || marca.isBlank()) {
-            throw new ReglaDominioException("El modelo debe tener una marca.");
-        }
-        if (version == null || version.isBlank()) {
-            throw new ReglaDominioException("El modelo debe tener una versión.");
-        }
+    public boolean incluyeModelo(Modelo modelo) {
+        return modelosCompatibles.stream()
+                .anyMatch(m -> m.marca().equalsIgnoreCase(modelo.marca())
+                        && m.version().equalsIgnoreCase(modelo.version())
+                        && m.anio() == modelo.anio());
     }
 }
