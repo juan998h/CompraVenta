@@ -45,6 +45,9 @@ public class Repuesto {
     }
 
     public void eliminarLogicamente() {
+        if (this.eliminadoLogicamente) {
+            throw new ReglaDominioException("Este repuesto ya fue eliminado.");
+        }
         this.eliminadoLogicamente = true;
     }
 

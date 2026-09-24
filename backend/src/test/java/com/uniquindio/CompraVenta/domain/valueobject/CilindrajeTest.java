@@ -19,7 +19,6 @@ class CilindrajeTest {
 
     @Test
     void noPermiteCrearCilindrajeMenorOIgualACero() {
-        // Arrange & Act & Assert
         assertThrows(ReglaDominioException.class, () -> {
             new Cilindraje(0);
         });
