@@ -3,7 +3,7 @@ package com.uniquindio.CompraVenta.application.usecase;
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.entity.VendedorEspecializado;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
-import com.uniquindio.CompraVenta.domain.Repository.RepuestoRepository;
+import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
 

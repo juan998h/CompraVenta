@@ -1,5 +1,4 @@
-package com.uniquindio.CompraVenta.domain.Repository;
-
+package com.uniquindio.CompraVenta.domain.repository;
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import java.util.Optional;
 
