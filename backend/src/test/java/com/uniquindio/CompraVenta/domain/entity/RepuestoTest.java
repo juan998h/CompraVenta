@@ -60,4 +60,17 @@ class RepuestoTest {
                     compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
         });
     }
+    @Test
+    void noDebePermitirVenderUnRepuestoEliminado() {
+        // Arrange
+        Repuesto repuesto = new Repuesto("Kit de arrastre", new BigDecimal("150000"),
+                compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
+        repuesto.eliminarLogicamente();
+
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, () -> {
+            repuesto.venderUnidad();
+        });
+        assertTrue(repuesto.isEliminadoLogicamente()); // el estado sigue igual, no se rompio nada
+    }
 }

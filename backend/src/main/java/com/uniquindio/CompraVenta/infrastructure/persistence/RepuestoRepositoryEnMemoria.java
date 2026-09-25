@@ -2,7 +2,7 @@
 package com.uniquindio.CompraVenta.infrastructure.persistence;
 
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
-import com.uniquindio.CompraVenta.domain.Repository.RepuestoRepository;
+import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 
 import java.util.HashMap;
 import java.util.Map;

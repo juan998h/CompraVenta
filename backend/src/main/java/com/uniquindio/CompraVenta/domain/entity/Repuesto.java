@@ -51,6 +51,11 @@ public class Repuesto {
         this.eliminadoLogicamente = true;
     }
 
+    public void venderUnidad() {
+        if (this.eliminadoLogicamente) {
+            throw new ReglaDominioException("No se puede vender un repuesto que ya fue eliminado.");
+        }
+    }
     public String getId() { return id; }
     public String getNombre() { return nombre; }
     public BigDecimal getPrecio() { return precio; }
