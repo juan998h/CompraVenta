@@ -19,58 +19,82 @@ class RepuestoTest {
         return new Compatibilidad(List.of(modelo));
     }
 
+    private Garantia garantiaValida() {
+        return new Garantia(6, "Garantia de fabrica");
+    }
+
+    private Repuesto repuestoValido(String id) {
+        return Repuesto.publicar(id, "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+                compatibilidadValida(), garantiaValida());
+    }
+
     @Test
-    void dosRepuestosConDatosDistintosNoSonElMismoPorquesusIdsSonDiferentes() {
+    void dosRepuestosConElMismoIdSonElMismoAunqueSusDatosDifieran() {
         // Arrange
-        Repuesto r1 = new Repuesto("Kit de arrastre", new BigDecimal("150000"),
-                compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
-        Repuesto r2 = new Repuesto("Kit de arrastre", new BigDecimal("150000"),
-                compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
+        Repuesto original = repuestoValido("1");
+        Repuesto otro = Repuesto.publicar("1", "vendedor-1", "Pastillas de freno",
+                new BigDecimal("90000"), compatibilidadValida(), garantiaValida());
 
         // Act & Assert
-        assertNotEquals(r1, r2); //  cada instancia tiene su propio id generado, no son la misma
+        assertEquals(original, otro); // Entidad: igual por IDENTIDAD
+    }
+
+    @Test
+    void dosRepuestosConIdDistintoNoSonElMismoAunqueTenganLosMismosDatos() {
+        // Arrange
+        Repuesto r1 = repuestoValido("1");
+        Repuesto r2 = repuestoValido("2");
+
+        // Act & Assert
+        assertNotEquals(r1, r2);
     }
 
     @Test
     void noPermiteCrearRepuestoSinModeloCompatible() {
+        // Arrange
         Compatibilidad sinModelos = new Compatibilidad(List.of());
-        assertThrows(ReglaDominioException.class, () -> {
-            new Repuesto("Kit de arrastre", new BigDecimal("150000"),
-                    sinModelos, new Garantia(6, "Garantia de fabrica"));
-        });
-    }
 
-    @Test
-    void noDebePermitirEliminarUnRepuestoYaEliminado() {
-        Repuesto repuesto = new Repuesto("Kit de arrastre", new BigDecimal("150000"),
-                compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
-        repuesto.eliminarLogicamente(); // primera eliminacion, valida
-
-        assertThrows(ReglaDominioException.class, () -> {
-            repuesto.eliminarLogicamente(); // segundo intento, debe fallar
-        });
-        assertTrue(repuesto.isEliminadoLogicamente()); // el estado sigue igual, no se rompio nada
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, () ->
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+                        sinModelos, garantiaValida()));
     }
 
     @Test
     void noPermitePrecioMenorOIgualACero() {
         // Arrange & Act & Assert
-        assertThrows(ReglaDominioException.class, () -> {
-            new Repuesto("Kit de arrastre", new BigDecimal("0"),
-                    compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
-        });
+        assertThrows(ReglaDominioException.class, () ->
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", BigDecimal.ZERO,
+                        compatibilidadValida(), garantiaValida()));
     }
+
     @Test
-    void noDebePermitirVenderUnRepuestoEliminado() {
+    void noPermiteCrearRepuestoSinGarantia() {
+        // Arrange & Act & Assert
+        assertThrows(ReglaDominioException.class, () ->
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+                        compatibilidadValida(), null));
+    }
+
+    @Test
+    void noDebePermitirEliminarUnRepuestoYaEliminado() {
         // Arrange
-        Repuesto repuesto = new Repuesto("Kit de arrastre", new BigDecimal("150000"),
-                compatibilidadValida(), new Garantia(6, "Garantia de fabrica"));
+        Repuesto repuesto = repuestoValido("1");
         repuesto.eliminarLogicamente();
 
         // Act & Assert
-        assertThrows(ReglaDominioException.class, () -> {
-            repuesto.venderUnidad();
-        });
-        assertTrue(repuesto.isEliminadoLogicamente()); // el estado sigue igual, no se rompio nada
+        assertThrows(ReglaDominioException.class, repuesto::eliminarLogicamente);
+        assertTrue(repuesto.isEliminadoLogicamente()); // el estado no cambio tras el rechazo
+    }
+
+    @Test
+    void noDebePermitirVenderUnRepuestoEliminado() {
+        // Arrange
+        Repuesto repuesto = repuestoValido("1");
+        repuesto.eliminarLogicamente();
+
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, repuesto::venderUnidad);
+        assertTrue(repuesto.isEliminadoLogicamente()); // el estado no cambio tras el rechazo
     }
 }

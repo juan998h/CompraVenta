@@ -14,13 +14,20 @@ public class Motocicleta {
     private int kilometraje;
     private final List<String> historialMantenimiento = new ArrayList<>();
 
-    public Motocicleta(String id, Modelo modelo) {
+    private Motocicleta(String id, Modelo modelo) {
         if (id == null || id.isBlank()) {
             throw new ReglaDominioException("La motocicleta debe tener placa o VIN.");
+        }
+        if (modelo == null) {
+            throw new ReglaDominioException("La motocicleta debe tener un modelo.");
         }
         this.id = id;
         this.modelo = modelo;
         this.kilometraje = 0;
+    }
+
+    public static Motocicleta registrar(String id, Modelo modelo) {
+        return new Motocicleta(id, modelo);
     }
 
     public void registrarMantenimiento(String descripcion, int kilometrajeActual) {
