@@ -5,6 +5,7 @@ import com.uniquindio.CompraVenta.domain.valueobject.Cilindraje;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
 import com.uniquindio.CompraVenta.domain.valueobject.Modelo;
+import com.uniquindio.CompraVenta.domain.valueobject.Precio;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -23,8 +24,12 @@ class RepuestoTest {
         return new Garantia(6, "Garantia de fabrica");
     }
 
+    private Precio precioValido() {
+        return Precio.enPesos(new BigDecimal("150000"));
+    }
+
     private Repuesto repuestoValido(String id) {
-        return Repuesto.publicar(id, "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+        return Repuesto.publicar(id, "vendedor-1", "Kit de arrastre", precioValido(),
                 compatibilidadValida(), garantiaValida());
     }
 
@@ -33,7 +38,7 @@ class RepuestoTest {
         // Arrange
         Repuesto original = repuestoValido("1");
         Repuesto otro = Repuesto.publicar("1", "vendedor-1", "Pastillas de freno",
-                new BigDecimal("90000"), compatibilidadValida(), garantiaValida());
+                Precio.enPesos(new BigDecimal("90000")), compatibilidadValida(), garantiaValida());
 
         // Act & Assert
         assertEquals(original, otro); // Entidad: igual por IDENTIDAD
@@ -56,15 +61,15 @@ class RepuestoTest {
 
         // Act & Assert
         assertThrows(ReglaDominioException.class, () ->
-                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", precioValido(),
                         sinModelos, garantiaValida()));
     }
 
     @Test
-    void noPermitePrecioMenorOIgualACero() {
+    void noPermiteCrearRepuestoSinPrecio() {
         // Arrange & Act & Assert
         assertThrows(ReglaDominioException.class, () ->
-                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", BigDecimal.ZERO,
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", null,
                         compatibilidadValida(), garantiaValida()));
     }
 
@@ -72,7 +77,7 @@ class RepuestoTest {
     void noPermiteCrearRepuestoSinGarantia() {
         // Arrange & Act & Assert
         assertThrows(ReglaDominioException.class, () ->
-                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", new BigDecimal("150000"),
+                Repuesto.publicar("1", "vendedor-1", "Kit de arrastre", precioValido(),
                         compatibilidadValida(), null));
     }
 

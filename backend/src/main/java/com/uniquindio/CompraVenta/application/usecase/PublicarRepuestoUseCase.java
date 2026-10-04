@@ -5,8 +5,7 @@ import com.uniquindio.CompraVenta.domain.entity.VendedorEspecializado;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
-
-import java.math.BigDecimal;
+import com.uniquindio.CompraVenta.domain.valueobject.Precio;
 
 public class PublicarRepuestoUseCase {
 
@@ -17,7 +16,7 @@ public class PublicarRepuestoUseCase {
     }
 
     public Repuesto ejecutar(String repuestoId, VendedorEspecializado vendedor, String nombre,
-                             BigDecimal precio, Compatibilidad compatibilidad, Garantia garantia,
+                             Precio precio, Compatibilidad compatibilidad, Garantia garantia,
                              boolean esCategoriaAltoRiesgo) {
         Repuesto repuesto = vendedor.publicarRepuesto(repuestoId, nombre, precio,
                 compatibilidad, garantia, esCategoriaAltoRiesgo);

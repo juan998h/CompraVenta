@@ -4,8 +4,8 @@ import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Especialidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
+import com.uniquindio.CompraVenta.domain.valueobject.Precio;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class VendedorEspecializado {
@@ -46,7 +46,7 @@ public class VendedorEspecializado {
         return verificado;
     }
 
-    public Repuesto publicarRepuesto(String repuestoId, String nombre, BigDecimal precio,
+    public Repuesto publicarRepuesto(String repuestoId, String nombre, Precio precio,
                                      Compatibilidad compatibilidad, Garantia garantia,
                                      boolean esCategoriaAltoRiesgo) {
         if (esCategoriaAltoRiesgo && !verificado) {
