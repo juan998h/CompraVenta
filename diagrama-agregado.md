@@ -1,6 +1,10 @@
 # Invariantes del agregado Repuesto
 
-1. Un Repuesto nunca puede crearse sin al menos un Modelo compatible declarado (su constructor lo valida y lanza ReglaDominioException si no cumple).
-2. El precio de un Repuesto siempre debe ser mayor a cero.
-3. Un Repuesto eliminado lógicamente (eliminarLogicamente()) nunca vuelve a estar disponible para la venta.
-4. La Garantia de un Repuesto siempre corresponde al tipo de producto y a las condiciones establecidas por el fabricante, nunca queda nula tras su creación.
+1. Un repuesto nunca puede publicarse sin al menos un modelo compatible.
+2. Un repuesto nunca puede publicarse sin precio ni sin garantía.
+3. El precio nunca puede ser menor o igual a cero.
+4. Un repuesto eliminado nunca puede eliminarse otra vez.
+5. Un repuesto eliminado nunca puede venderse.
+
+VendedorEspecializado y Compra ya no son "planeados". Compra es el segundo agregado
+del proyecto, y sus invariantes están en docs/invariantes.md.
