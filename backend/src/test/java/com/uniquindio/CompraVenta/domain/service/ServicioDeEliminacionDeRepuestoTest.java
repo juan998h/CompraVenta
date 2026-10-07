@@ -19,17 +19,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ServicioDeEliminacionDeRepuestosTest {
+class ServicioDeEliminacionDeRepuestoTest {
 
     private static final LocalDateTime AHORA = LocalDateTime.of(2026, 10, 4, 10, 0);
 
     private CompraRepository compraRepository;
-    private ServicioDeEliminacionDeRepuestos servicio;
+    private ServicioDeEliminacionDeRepuesto servicio;
 
     @BeforeEach
     void preparar() {
         compraRepository = new CompraRepositoryEnMemoria();
-        servicio = new ServicioDeEliminacionDeRepuestos(compraRepository);
+        servicio = new ServicioDeEliminacionDeRepuesto(compraRepository);
     }
 
     private Repuesto repuestoValido() {

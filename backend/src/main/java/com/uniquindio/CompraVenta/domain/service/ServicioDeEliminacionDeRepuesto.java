@@ -4,11 +4,11 @@ import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
 
-public class ServicioDeEliminacionDeRepuestos {
+public class ServicioDeEliminacionDeRepuesto {
 
     private final CompraRepository compraRepository;
 
-    public ServicioDeEliminacionDeRepuestos(CompraRepository compraRepository) {
+    public ServicioDeEliminacionDeRepuesto(CompraRepository compraRepository) {
         this.compraRepository = compraRepository;
     }
 

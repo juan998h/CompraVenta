@@ -3,7 +3,7 @@ package com.uniquindio.CompraVenta.application.usecase;
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
-import com.uniquindio.CompraVenta.domain.service.ServicioDeEliminacionDeRepuestos;
+import com.uniquindio.CompraVenta.domain.service.ServicioDeEliminacionDeRepuesto;
 import com.uniquindio.CompraVenta.domain.valueobject.Cilindraje;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
 import com.uniquindio.CompraVenta.domain.valueobject.Garantia;
@@ -28,7 +28,7 @@ class EliminarRepuestoUseCaseTest {
     void preparar() {
         repuestoRepository = new RepuestoRepositoryEnMemoria();
         useCase = new EliminarRepuestoUseCase(repuestoRepository,
-                new ServicioDeEliminacionDeRepuestos(new CompraRepositoryEnMemoria()));
+                new ServicioDeEliminacionDeRepuesto(new CompraRepositoryEnMemoria()));
     }
 
     @Test
