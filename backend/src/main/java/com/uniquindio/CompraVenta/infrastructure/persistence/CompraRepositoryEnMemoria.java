@@ -28,4 +28,13 @@ public class CompraRepositoryEnMemoria implements CompraRepository {
                         && c.getRepuestoId().equals(repuestoId)
                         && c.estaActiva());
     }
+
+
+
+    @Override
+    public boolean existeCompraActivaDelRepuesto(String repuestoId) {
+        return compras.values().stream()
+                .anyMatch(c -> c.getRepuestoId().equals(repuestoId)
+                        && c.estaActiva());
+    }
 }

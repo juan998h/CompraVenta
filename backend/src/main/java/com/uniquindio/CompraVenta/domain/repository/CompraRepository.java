@@ -8,4 +8,5 @@ public interface CompraRepository {
     Optional<Compra> obtenerPorId(String id);
     void guardar(Compra compra);
     boolean existeCompraActiva(String compradorId, String repuestoId);
+    boolean existeCompraActivaDelRepuesto(String repuestoId);
 }

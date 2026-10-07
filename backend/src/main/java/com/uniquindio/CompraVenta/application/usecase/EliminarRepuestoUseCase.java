@@ -3,15 +3,15 @@ package com.uniquindio.CompraVenta.application.usecase;
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
-import com.uniquindio.CompraVenta.domain.service.ServicioDeEliminacionDeRepuestos;
+import com.uniquindio.CompraVenta.domain.service.ServicioDeEliminacionDeRepuesto;
 
 public class EliminarRepuestoUseCase {
 
     private final RepuestoRepository repuestoRepository;
-    private final ServicioDeEliminacionDeRepuestos servicio;
+    private final ServicioDeEliminacionDeRepuesto servicio;
 
     public EliminarRepuestoUseCase(RepuestoRepository repuestoRepository,
-                                   ServicioDeEliminacionDeRepuestos servicio) {
+                                   ServicioDeEliminacionDeRepuesto servicio) {
         this.repuestoRepository = repuestoRepository;
         this.servicio = servicio;
     }

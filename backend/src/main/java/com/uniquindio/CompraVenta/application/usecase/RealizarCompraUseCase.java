@@ -1,20 +1,33 @@
 package com.uniquindio.CompraVenta.application.usecase;
 
+import com.uniquindio.CompraVenta.domain.entity.Compra;
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
+import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
+import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
+import com.uniquindio.CompraVenta.domain.service.ServicioDeCompra;
 
-// El flujo típico: alguien encuentra un repuesto que le sirve y lo compra.
-// Por ahora solo validamos lo básico antes de crear la compra en sí.
+import java.time.LocalDateTime;
+
 public class RealizarCompraUseCase {
 
-    public void ejecutar(String compradorId, Repuesto repuesto) {
-        if (compradorId == null || compradorId.isBlank()) {
-            throw new ReglaDominioException("Debe indicarse el comprador que realiza la compra.");
-        }
-        if (repuesto.isEliminadoLogicamente()) {
-            // si el vendedor ya lo dio de baja, no debería poder comprarse
-            throw new ReglaDominioException("No se puede comprar un repuesto que ya no está disponible.");
-        }
+    private final RepuestoRepository repuestoRepository;
+    private final CompraRepository compraRepository;
+    private final ServicioDeCompra servicioDeCompra;
 
+    public RealizarCompraUseCase(RepuestoRepository repuestoRepository,
+                                 CompraRepository compraRepository,
+                                 ServicioDeCompra servicioDeCompra) {
+        this.repuestoRepository = repuestoRepository;
+        this.compraRepository = compraRepository;
+        this.servicioDeCompra = servicioDeCompra;
+    }
+
+    public Compra ejecutar(String compraId, String compradorId, String repuestoId, LocalDateTime ahora) {
+        Repuesto repuesto = repuestoRepository.obtenerPorId(repuestoId)
+                .orElseThrow(() -> new ReglaDominioException("No existe el repuesto indicado."));
+        Compra compra = servicioDeCompra.realizarCompra(compraId, compradorId, repuesto, ahora);
+        compraRepository.guardar(compra);
+        return compra;
     }
 }
