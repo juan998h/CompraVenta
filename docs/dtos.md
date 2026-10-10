@@ -69,9 +69,9 @@ Se arma a partir de la entidad Repuesto. Lo devuelven BuscarRepuestosCompatibles
 | Caso de uso | Entrada | Salida | Estado del caso de uso |
 |---|---|---|---|
 | PublicarRepuesto | PublicarRepuestoRequest | RepuestoResponse | Programado |
-| BuscarRepuestosCompatibles | Parámetros de consulta del Modelo | Lista de RepuestoResponse | Diseñado |
-| RealizarCompra | RealizarCompraRequest | CompraResponse | Diseñado |
-| ConfirmarPago | compraId en la ruta | CompraResponse | Diseñado |
+| BuscarRepuestosCompatibles | Parámetros de consulta del Modelo | Lista de RepuestoResponse | Programado |
+| RealizarCompra | RealizarCompraRequest | CompraResponse | Programado |
+| ConfirmarPago | compraId en la ruta | CompraResponse | Programado |
 | RegistrarDescarga | compraId en la ruta | CompraResponse | Programado |
 | SolicitarReembolso | SolicitarReembolsoRequest | CompraResponse | Programado |
 | ConsultarHistorialDeCompras | compradorId en la ruta | Lista de CompraResponse | Diseñado |

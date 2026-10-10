@@ -3,7 +3,7 @@
 Una invariante es una regla que siempre debe cumplirse. Cada una se protege dentro del dominio
 y se verifica con una prueba. 
 
-## Agregado 1: Repuesto
+## Agregado Repuesto
 
 - **Raíz:** Repuesto.
 - **Dentro del límite:** Precio, Compatibilidad (con sus Modelo y Cilindraje) y Garantia.
@@ -18,7 +18,7 @@ y se verifica con una prueba.
 | 5 | Un repuesto eliminado nunca puede venderse. | Repuesto.venderUnidad() | RepuestoTest: noDebePermitirVenderUnRepuestoEliminado (comprueba la excepción y que el estado no cambió) |
 | 6 | Un repuesto nunca puede existir sin identificador, vendedor y nombre. | Repuesto.publicar() (constructor privado) | Sin prueba propia (protegida en el código) |
 
-## Agregado 2: Compra
+## Agregado Compra
 
 - **Raíz:** Compra.
 - **Dentro del límite:** Precio (el precio pagado, copiado al momento de comprar) y EstadoCompra.
@@ -43,10 +43,15 @@ y se verifica con una prueba.
 
 Esta regla pertenece a VendedorEspecializado, que es una entidad. 
 
-## Reglas diseñadas, todavía no integradas
+## Reglas entre agregados, en servicios de dominio
 
 Estas reglas necesitan consultar un Repository, por eso su lugar es un servicio de dominio y no una entidad.
 
-- Un comprador nunca puede tener dos compras activas del mismo repuesto: ServicioDeCompra.
-- Un repuesto nunca puede eliminarse mientras tenga compras pendientes o sujetas a reembolso: ServicioDeEliminacionDeRepuestos.
-- Un repuesto nunca puede ser eliminado por un vendedor distinto del que lo publicó: ServicioDeEliminacionDeRepuestos.
+| Regla | Dónde se protege | Prueba |
+|---|---|---|
+| Un comprador nunca puede tener dos compras activas del mismo repuesto. | ServicioDeCompra.realizarCompra() | ServicioDeCompraTest: noDebePermitirComprarUnRepuestoConUnaCompraActivaDelMismoComprador; permiteComprarDeNuevoUnRepuestoCuyaCompraAnteriorFueReembolsada |
+| Un repuesto nunca puede eliminarse mientras tenga compras activas (pendientes o completadas). | ServicioDeEliminacionDeRepuesto.eliminar() | ServicioDeEliminacionDeRepuestoTest: noDebePermitirEliminarUnRepuestoConComprasActivas; permiteEliminarUnRepuestoSinComprasActivas |
+
+## Reglas diseñadas, todavía no integradas
+
+- Un repuesto nunca puede ser eliminado por un vendedor distinto del que lo publicó: ServicioDeEliminacionDeRepuesto.
