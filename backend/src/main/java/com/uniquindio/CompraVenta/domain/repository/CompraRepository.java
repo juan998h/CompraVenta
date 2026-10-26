@@ -2,6 +2,7 @@ package com.uniquindio.CompraVenta.domain.repository;
 
 import com.uniquindio.CompraVenta.domain.entity.Compra;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CompraRepository {
@@ -9,4 +10,5 @@ public interface CompraRepository {
     void guardar(Compra compra);
     boolean existeCompraActiva(String compradorId, String repuestoId);
     boolean existeCompraActivaDelRepuesto(String repuestoId);
+    List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite);
 }

@@ -49,6 +49,17 @@ public class Compra {
                                   Precio precioPagado, LocalDateTime fechaCompra) {
         return new Compra(id, repuestoId, compradorId, precioPagado, fechaCompra);
     }
+    public static Compra reconstruir(String id, String repuestoId, String compradorId,
+                                     Precio precioPagado, LocalDateTime fechaCompra,
+                                     EstadoCompra estado, LocalDateTime fechaDescarga) {
+        if (estado == null) {
+            throw new ReglaDominioException("La compra debe tener un estado.");
+        }
+        Compra compra = new Compra(id, repuestoId, compradorId, precioPagado, fechaCompra);
+        compra.estado = estado;
+        compra.fechaDescarga = fechaDescarga;
+        return compra;
+    }
 
     public void completar() {
         if (estado != EstadoCompra.PENDIENTE) {
