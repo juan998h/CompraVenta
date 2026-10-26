@@ -2,10 +2,15 @@ package com.uniquindio.CompraVenta.infrastructure.persistence;
 
 import com.uniquindio.CompraVenta.domain.entity.Compra;
 import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
+import com.uniquindio.CompraVenta.domain.repository.ReembolsosPorComprador;
+import com.uniquindio.CompraVenta.domain.valueobject.EstadoCompra;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CompraRepositoryEnMemoria implements CompraRepository {
 
@@ -29,12 +34,23 @@ public class CompraRepositoryEnMemoria implements CompraRepository {
                         && c.estaActiva());
     }
 
-
-
     @Override
     public boolean existeCompraActivaDelRepuesto(String repuestoId) {
         return compras.values().stream()
                 .anyMatch(c -> c.getRepuestoId().equals(repuestoId)
                         && c.estaActiva());
+    }
+
+    @Override
+    public List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite) {
+        return compras.values().stream()
+                .filter(c -> c.getEstado() == EstadoCompra.REEMBOLSADA)
+                .collect(Collectors.groupingBy(Compra::getCompradorId, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new ReembolsosPorComprador(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparing(ReembolsosPorComprador::cantidad).reversed()
+                        .thenComparing(ReembolsosPorComprador::compradorId))
+                .limit(limite)
+                .toList();
     }
 }
