@@ -12,22 +12,32 @@ public class Motocicleta {
     private final String id;
     private final Modelo modelo;
     private int kilometraje;
-    private final List<String> historialMantenimiento = new ArrayList<>();
+    private final List<String> historialMantenimiento;
 
-    private Motocicleta(String id, Modelo modelo) {
+    // Constructor privado: solo asigna. Las reglas se validan en registrar(...).
+    private Motocicleta(String id, Modelo modelo, int kilometraje,
+                        List<String> historialMantenimiento) {
+        this.id = id;
+        this.modelo = modelo;
+        this.kilometraje = kilometraje;
+        this.historialMantenimiento = historialMantenimiento;
+    }
+
+    // Unico punto de entrada para registrar una Motocicleta: valida ANTES de existir.
+    public static Motocicleta registrar(String id, Modelo modelo) {
         if (id == null || id.isBlank()) {
             throw new ReglaDominioException("La motocicleta debe tener placa o VIN.");
         }
         if (modelo == null) {
             throw new ReglaDominioException("La motocicleta debe tener un modelo.");
         }
-        this.id = id;
-        this.modelo = modelo;
-        this.kilometraje = 0;
+        return new Motocicleta(id, modelo, 0, new ArrayList<>());
     }
 
-    public static Motocicleta registrar(String id, Modelo modelo) {
-        return new Motocicleta(id, modelo);
+    // Solo para el adaptador de persistencia: "revive" una motocicleta que YA existia (no valida).
+    public static Motocicleta reconstruir(String id, Modelo modelo, int kilometraje,
+                                          List<String> historialMantenimiento) {
+        return new Motocicleta(id, modelo, kilometraje, new ArrayList<>(historialMantenimiento));
     }
 
     public void registrarMantenimiento(String descripcion, int kilometrajeActual) {

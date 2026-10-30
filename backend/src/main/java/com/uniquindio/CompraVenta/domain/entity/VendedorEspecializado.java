@@ -15,7 +15,17 @@ public class VendedorEspecializado {
     private final Especialidad especialidad;
     private boolean verificado;
 
-    private VendedorEspecializado(String id, String nombre, Especialidad especialidad) {
+    // Constructor privado: solo asigna. Las reglas se validan en registrar(...).
+    private VendedorEspecializado(String id, String nombre, Especialidad especialidad,
+                                  boolean verificado) {
+        this.id = id;
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+        this.verificado = verificado;
+    }
+
+    // Unico punto de entrada para registrar un vendedor: valida ANTES de existir.
+    public static VendedorEspecializado registrar(String id, String nombre, Especialidad especialidad) {
         if (id == null || id.isBlank()) {
             throw new ReglaDominioException("El vendedor debe tener un identificador.");
         }
@@ -25,14 +35,13 @@ public class VendedorEspecializado {
         if (especialidad == null) {
             throw new ReglaDominioException("El vendedor debe declarar una especialidad.");
         }
-        this.id = id;
-        this.nombre = nombre;
-        this.especialidad = especialidad;
-        this.verificado = false;
+        return new VendedorEspecializado(id, nombre, especialidad, false);
     }
 
-    public static VendedorEspecializado registrar(String id, String nombre, Especialidad especialidad) {
-        return new VendedorEspecializado(id, nombre, especialidad);
+    // Solo para el adaptador de persistencia: "revive" un vendedor que YA existia (no valida).
+    public static VendedorEspecializado reconstruir(String id, String nombre,
+                                                    Especialidad especialidad, boolean verificado) {
+        return new VendedorEspecializado(id, nombre, especialidad, verificado);
     }
 
     public void verificarEspecialidad() {
