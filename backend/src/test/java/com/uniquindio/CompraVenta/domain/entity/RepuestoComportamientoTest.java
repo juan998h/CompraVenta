@@ -153,7 +153,7 @@ class RepuestoComportamientoTest {
     }
 
     @Test
-    void noDebePermitirEliminarAUnVendedorQueNoEsElDueno() {
+    void noDebePermitirEliminarAUnVendedorQueNoEsElDueño() {
         // Arrange
         Repuesto repuesto = repuestoCon(MT07);
 
@@ -163,7 +163,7 @@ class RepuestoComportamientoTest {
     }
 
     @Test
-    void deberiaPermitirEliminarAlVendedorDueno() {
+    void deberiaPermitirEliminarAlVendedorDueño() {
         // Arrange
         Repuesto repuesto = repuestoCon(MT07);
 

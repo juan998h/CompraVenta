@@ -47,7 +47,7 @@ class ServicioDeEliminacionDeRepuestoTest {
                 repuesto.getPrecio(), AHORA));
 
         // Act & Assert
-        assertThrows(ReglaDominioException.class, () -> servicio.eliminar(repuesto));
+        assertThrows(ReglaDominioException.class, () -> servicio.eliminar(repuesto, "vendedor-1"));
         assertFalse(repuesto.isEliminadoLogicamente()); // el estado no cambio tras el rechazo
     }
 
@@ -57,9 +57,19 @@ class ServicioDeEliminacionDeRepuestoTest {
         Repuesto repuesto = repuestoValido();
 
         // Act
-        servicio.eliminar(repuesto);
+        servicio.eliminar(repuesto, "vendedor-1");
 
         // Assert
         assertTrue(repuesto.isEliminadoLogicamente());
+    }
+
+    @Test
+    void noDebePermitirEliminarUnRepuestoQueNoEsDelVendedor() {
+        // Arrange
+        Repuesto repuesto = repuestoValido();
+
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, () -> servicio.eliminar(repuesto, "otro-vendedor"));
+        assertFalse(repuesto.isEliminadoLogicamente());
     }
 }

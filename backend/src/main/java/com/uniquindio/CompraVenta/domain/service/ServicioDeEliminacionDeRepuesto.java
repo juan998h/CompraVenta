@@ -12,10 +12,11 @@ public class ServicioDeEliminacionDeRepuesto {
         this.compraRepository = compraRepository;
     }
 
-    public void eliminar(Repuesto repuesto) {
+    public void eliminar(Repuesto repuesto, String vendedorId) {
         if (repuesto == null) {
             throw new ReglaDominioException("Debe indicarse el repuesto a eliminar.");
         }
+        repuesto.verificarQueLoPuedeEliminar(vendedorId);
         if (compraRepository.existeCompraActivaDelRepuesto(repuesto.getId())) {
             throw new ReglaDominioException("No se puede eliminar un repuesto con compras activas.");
         }
