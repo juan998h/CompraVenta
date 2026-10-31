@@ -1,7 +1,7 @@
 package com.uniquindio.CompraVenta.application.usecase;
 
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
-import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
+import com.uniquindio.CompraVenta.domain.exception.RecursoNoEncontradoException;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 import com.uniquindio.CompraVenta.domain.service.ServicioDeEliminacionDeRepuesto;
 
@@ -16,10 +16,10 @@ public class EliminarRepuestoUseCase {
         this.servicio = servicio;
     }
 
-    public Repuesto ejecutar(String repuestoId) {
+    public Repuesto ejecutar(String repuestoId, String vendedorId) {
         Repuesto repuesto = repuestoRepository.obtenerPorId(repuestoId)
-                .orElseThrow(() -> new ReglaDominioException("No existe el repuesto indicado."));
-        servicio.eliminar(repuesto);
+                .orElseThrow(() -> new RecursoNoEncontradoException("No existe el repuesto indicado."));
+        servicio.eliminar(repuesto, vendedorId);
         repuestoRepository.guardar(repuesto);
         return repuesto;
     }

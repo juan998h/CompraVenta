@@ -31,16 +31,20 @@ class EliminarRepuestoUseCaseTest {
                 new ServicioDeEliminacionDeRepuesto(new CompraRepositoryEnMemoria()));
     }
 
-    @Test
-    void eliminarUnRepuestoLoDejaMarcadoComoEliminadoEnElRepositorio() {
-        // Arrange
+    private void guardarRepuestoDeVendedor1() {
         Modelo modelo = new Modelo("Kawasaki", "Z900", 2023, new Cilindraje(948));
         repuestoRepository.guardar(Repuesto.publicar("repuesto-1", "vendedor-1", "Kit de arrastre",
                 Precio.enPesos(new BigDecimal("150000")),
                 new Compatibilidad(List.of(modelo)), new Garantia(6, "Garantia de fabrica")));
+    }
+
+    @Test
+    void eliminarUnRepuestoLoDejaMarcadoComoEliminadoEnElRepositorio() {
+        // Arrange
+        guardarRepuestoDeVendedor1();
 
         // Act
-        useCase.ejecutar("repuesto-1");
+        useCase.ejecutar("repuesto-1", "vendedor-1");
 
         // Assert
         assertTrue(repuestoRepository.obtenerPorId("repuesto-1").orElseThrow().isEliminadoLogicamente());
@@ -49,6 +53,16 @@ class EliminarRepuestoUseCaseTest {
     @Test
     void noPermiteEliminarUnRepuestoQueNoExiste() {
         // Arrange & Act & Assert
-        assertThrows(ReglaDominioException.class, () -> useCase.ejecutar("no-existe"));
+        assertThrows(ReglaDominioException.class, () -> useCase.ejecutar("no-existe", "vendedor-1"));
+    }
+
+    @Test
+    void noPermiteQueOtroVendedorElimineElRepuesto() {
+        // Arrange
+        guardarRepuestoDeVendedor1();
+
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, () -> useCase.ejecutar("repuesto-1", "otro-vendedor"));
+        assertFalse(repuestoRepository.obtenerPorId("repuesto-1").orElseThrow().isEliminadoLogicamente());
     }
 }
