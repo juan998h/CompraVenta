@@ -74,7 +74,7 @@ class CompraControllerTest {
     }
 
     @Test
-    void deberiaResponder400CuandoSeRompeUnaReglaDeNegocio() throws Exception {
+    void deberiaResponder422CuandoSeRompeUnaReglaDeNegocio() throws Exception {
         // Arrange
         when(realizarCompra.ejecutar(any(), any(), any(), any()))
                 .thenThrow(new ReglaDominioException("El comprador ya tiene una compra activa de este repuesto."));
@@ -83,7 +83,7 @@ class CompraControllerTest {
         mockMvc.perform(post("/api/compras")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CUERPO_VALIDO))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.mensaje").value("El comprador ya tiene una compra activa de este repuesto."));
     }
 
@@ -95,7 +95,8 @@ class CompraControllerTest {
                         .content("""
                                 { "compradorId": "ana" }
                                 """))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensaje").exists());
 
         verify(realizarCompra, never()).ejecutar(any(), any(), any(), any());
     }
