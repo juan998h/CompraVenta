@@ -1,6 +1,7 @@
 package com.uniquindio.CompraVenta.infrastructure.persistence.jpa;
 
 import com.uniquindio.CompraVenta.domain.repository.ReembolsosPorComprador;
+import com.uniquindio.CompraVenta.domain.repository.RepuestoMasVendido;
 import com.uniquindio.CompraVenta.domain.valueobject.EstadoCompra;
 import com.uniquindio.CompraVenta.infrastructure.persistence.jpa.entity.CompraEntity;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +27,17 @@ interface CompraJpaDataRepository extends JpaRepository<CompraEntity, String> {
             ORDER BY COUNT(c) DESC, c.compradorId ASC
             """)
     List<ReembolsosPorComprador> compradoresConMasReembolsos(
+            @Param("estado") EstadoCompra estado, Pageable pageable);
+
+    // Ranking con JOIN + GROUP BY + COUNT: la base de datos une, agrupa, cuenta y ordena.
+    @Query("""
+            SELECT new com.uniquindio.CompraVenta.domain.repository.RepuestoMasVendido(r.id, r.nombre, COUNT(c))
+            FROM CompraEntity c
+            JOIN RepuestoEntity r ON r.id = c.repuestoId
+            WHERE c.estado = :estado
+            GROUP BY r.id, r.nombre
+            ORDER BY COUNT(c) DESC, r.nombre ASC
+            """)
+    List<RepuestoMasVendido> repuestosMasVendidos(
             @Param("estado") EstadoCompra estado, Pageable pageable);
 }

@@ -11,4 +11,7 @@ public interface CompraRepository {
     boolean existeCompraActiva(String compradorId, String repuestoId);
     boolean existeCompraActivaDelRepuesto(String repuestoId);
     List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite);
+
+    /** Ranking de repuestos por compras COMPLETADAS (une compras con repuestos). */
+    List<RepuestoMasVendido> repuestosMasVendidos(int limite);
 }

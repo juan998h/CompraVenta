@@ -3,6 +3,7 @@ package com.uniquindio.CompraVenta.infrastructure.persistence.jpa;
 import com.uniquindio.CompraVenta.domain.entity.Compra;
 import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
 import com.uniquindio.CompraVenta.domain.repository.ReembolsosPorComprador;
+import com.uniquindio.CompraVenta.domain.repository.RepuestoMasVendido;
 import com.uniquindio.CompraVenta.domain.valueobject.EstadoCompra;
 import com.uniquindio.CompraVenta.infrastructure.persistence.jpa.mapper.CompraPersistenceMapper;
 import org.springframework.data.domain.PageRequest;
@@ -53,5 +54,11 @@ public class CompraRepositoryJpa implements CompraRepository {
     public List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite) {
         return dataRepository.compradoresConMasReembolsos(
                 EstadoCompra.REEMBOLSADA, PageRequest.of(0, limite));
+    }
+
+    @Override
+    public List<RepuestoMasVendido> repuestosMasVendidos(int limite) {
+        return dataRepository.repuestosMasVendidos(
+                EstadoCompra.COMPLETADA, PageRequest.of(0, limite));
     }
 }
