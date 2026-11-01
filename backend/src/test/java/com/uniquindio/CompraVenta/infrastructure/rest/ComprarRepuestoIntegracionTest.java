@@ -51,15 +51,17 @@ class ComprarRepuestoIntegracionTest {
                 "Pastillas de freno", Precio.enPesos(new BigDecimal("150000")),
                 compatibilidad, new Garantia(6, "Garantia de fabrica")));
 
-        // Act 1: el comprador compra
+        // Act 1: el comprador "ana" compra (el comprador sale del token, no del cuerpo)
         String ubicacion = mockMvc.perform(post("/api/compras")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("COMPRADOR")))
+                        .with(jwt().jwt(token -> token.subject("ana"))
+                                .authorities(new SimpleGrantedAuthority("COMPRADOR")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                { "repuestoId": "rep-integracion", "compradorId": "ana" }
+                                { "repuestoId": "rep-integracion" }
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"))
+                .andExpect(jsonPath("$.compradorId").value("ana"))
                 .andReturn().getResponse().getHeader("Location");
         String compraId = ubicacion.substring(ubicacion.lastIndexOf('/') + 1);
 
@@ -72,6 +74,7 @@ class ComprarRepuestoIntegracionTest {
         // Assert: la base de datos quedo con la compra completada y con el precio congelado
         var guardada = compraRepository.obtenerPorId(compraId).orElseThrow();
         assertEquals(EstadoCompra.COMPLETADA, guardada.getEstado());
+        assertEquals("ana", guardada.getCompradorId());
         assertEquals(new BigDecimal("150000.00"), guardada.getPrecioPagado().monto());
     }
 }
