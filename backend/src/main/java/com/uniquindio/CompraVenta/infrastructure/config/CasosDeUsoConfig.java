@@ -5,17 +5,13 @@ import com.uniquindio.CompraVenta.application.usecase.RealizarCompraUseCase;
 import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 import com.uniquindio.CompraVenta.domain.service.ServicioDeCompra;
-import com.uniquindio.CompraVenta.infrastructure.persistence.RepuestoRepositoryEnMemoria;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CasosDeUsoConfig {
 
-    @Bean
-    public RepuestoRepository repuestoRepository() {
-        return new RepuestoRepositoryEnMemoria();
-    }
+    // Ya no hay bean de RepuestoRepository en memoria: ahora lo provee RepuestoRepositoryJpa.
 
     @Bean
     public ServicioDeCompra servicioDeCompra(CompraRepository compraRepository) {
@@ -24,8 +20,7 @@ public class CasosDeUsoConfig {
 
     @Bean
     public RealizarCompraUseCase realizarCompraUseCase(RepuestoRepository repuestoRepository,
-                                                       CompraRepository compraRepository,
-                                                       ServicioDeCompra servicioDeCompra) {
+     CompraRepository compraRepository, ServicioDeCompra servicioDeCompra) {
         return new RealizarCompraUseCase(repuestoRepository, compraRepository, servicioDeCompra);
     }
 
