@@ -18,4 +18,6 @@ Estado:
 | 6 | ConfirmarPago | Comprador | Completa la compra tras el pago simulado | CompraRepository | Compra.completar() | Programado |
 | 7 | RegistrarDescarga | Comprador | Registra que el archivo fue descargado | CompraRepository | Compra.registrarDescarga() | Programado |
 | 8 | SolicitarReembolso | Comprador | Pide el reembolso de una compra | CompraRepository | Compra.solicitarReembolso() | Programado |
-| 9 | ConsultarHistorialDeCompras | Comprador | Lista las compras de un comprador | CompraRepository (método nuevo: obtenerPorComprador) | Ninguno, solo consulta | Diseñado |
+| 9 | ConsultarHistorialDeCompras | Comprador | Lista las compras de un comprador | CompraRepository (método nuevo: obtenerPorComprador) | Ninguno, solo consulta | Programado |
+| 10 | ListarRepuestos | Comprador | Lista paginada de repuestos disponibles, con busqueda por texto y precio maximo | RepuestoRepository (buscarDisponibles) | Ninguno, solo consulta (la base de datos filtra, cuenta y pagina) | Programado |
+| 11 | ConsultarRepuestosMasVendidos | Vendedor | Ranking de repuestos por compras completadas | CompraRepository (repuestosMasVendidos) | Ninguno, solo consulta (JOIN, GROUP BY y COUNT en la base de datos) | Programado |
