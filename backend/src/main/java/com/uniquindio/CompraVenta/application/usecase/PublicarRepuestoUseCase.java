@@ -2,7 +2,7 @@ package com.uniquindio.CompraVenta.application.usecase;
 
 import com.uniquindio.CompraVenta.domain.entity.Repuesto;
 import com.uniquindio.CompraVenta.domain.entity.VendedorEspecializado;
-import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
+import com.uniquindio.CompraVenta.domain.exception.RecursoNoEncontradoException;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoRepository;
 import com.uniquindio.CompraVenta.domain.repository.VendedorRepository;
 import com.uniquindio.CompraVenta.domain.valueobject.Compatibilidad;
@@ -24,7 +24,7 @@ public class PublicarRepuestoUseCase {
                              Compatibilidad compatibilidad, Garantia garantia,
                              boolean esCategoriaAltoRiesgo) {
         VendedorEspecializado vendedor = vendedorRepository.obtenerPorId(vendedorId)
-                .orElseThrow(() -> new ReglaDominioException("No existe el vendedor indicado."));
+                .orElseThrow(() -> new RecursoNoEncontradoException("No existe el vendedor indicado."));
         Repuesto repuesto = vendedor.publicarRepuesto(repuestoId, nombre, precio,
                 compatibilidad, garantia, esCategoriaAltoRiesgo);
         repuestoRepository.guardar(repuesto);
