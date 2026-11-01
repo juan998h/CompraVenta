@@ -44,6 +44,7 @@ public class SeguridadConfig {
         http
                 // CSRF se desactiva porque la API usa tokens y no sesiones de navegador
                 .csrf(csrf -> csrf.disable())
+                .headers(encabezados -> encabezados.frameOptions(marco -> marco.sameOrigin()))
                 // Sin sesiones: cada peticion trae su token
                 .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(rutas -> rutas
@@ -51,6 +52,7 @@ public class SeguridadConfig {
                         // Rutas publicas: registro, login y Swagger
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
 
                         // Solo el VENDEDOR publica y elimina repuestos
                         .requestMatchers(HttpMethod.POST, "/api/repuestos").hasAuthority("VENDEDOR")
