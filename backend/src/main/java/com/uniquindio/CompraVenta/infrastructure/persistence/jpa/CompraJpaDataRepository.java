@@ -19,6 +19,8 @@ interface CompraJpaDataRepository extends JpaRepository<CompraEntity, String> {
 
     boolean existsByRepuestoIdAndEstadoIn(String repuestoId, Collection<EstadoCompra> estados);
 
+    List<CompraEntity> findByCompradorIdOrderByFechaCompraDesc(String compradorId);
+
     @Query("""
             SELECT new com.uniquindio.CompraVenta.domain.repository.ReembolsosPorComprador(c.compradorId, COUNT(c))
             FROM CompraEntity c

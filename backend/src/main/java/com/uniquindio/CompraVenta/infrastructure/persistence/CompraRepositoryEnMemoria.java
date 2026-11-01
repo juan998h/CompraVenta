@@ -36,6 +36,14 @@ public class CompraRepositoryEnMemoria implements CompraRepository {
     }
 
     @Override
+    public List<Compra> obtenerPorComprador(String compradorId) {
+        return compras.values().stream()
+                .filter(c -> c.getCompradorId().equals(compradorId))
+                .sorted(Comparator.comparing(Compra::getFechaCompra).reversed())
+                .toList();
+    }
+
+    @Override
     public boolean existeCompraActivaDelRepuesto(String repuestoId) {
         return compras.values().stream()
                 .anyMatch(c -> c.getRepuestoId().equals(repuestoId)

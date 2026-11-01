@@ -40,6 +40,13 @@ public class CompraRepositoryJpa implements CompraRepository {
     }
 
     @Override
+    public List<Compra> obtenerPorComprador(String compradorId) {
+        return dataRepository.findByCompradorIdOrderByFechaCompraDesc(compradorId).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public boolean existeCompraActiva(String compradorId, String repuestoId) {
         return dataRepository.existsByCompradorIdAndRepuestoIdAndEstadoIn(
                 compradorId, repuestoId, ESTADOS_ACTIVOS);

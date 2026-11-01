@@ -1,5 +1,6 @@
 package com.uniquindio.CompraVenta.infrastructure.persistence.jpa;
 
+import com.uniquindio.CompraVenta.domain.entity.Compra;
 import com.uniquindio.CompraVenta.domain.repository.CompraRepository;
 import com.uniquindio.CompraVenta.domain.repository.RepuestoMasVendido;
 import org.junit.jupiter.api.Test;
@@ -33,5 +34,17 @@ class ConsultasConDatosDePruebaTest {
         assertEquals(3L, ranking.get(1).unidades());
         assertEquals("filtro-aceite", ranking.get(2).repuestoId());
         assertEquals(2L, ranking.get(2).unidades());
+    }
+
+    @Test
+    void elHistorialDeUnCompradorSaleDeLaMasRecienteALaMasAntigua() {
+        // Act (en data.sql ana tiene C-001, C-002 y C-014)
+        List<Compra> historial = compraRepository.obtenerPorComprador("ana");
+
+        // Assert
+        assertEquals(3, historial.size());
+        assertEquals("C-014", historial.get(0).getId());
+        assertEquals("C-002", historial.get(1).getId());
+        assertEquals("C-001", historial.get(2).getId());
     }
 }

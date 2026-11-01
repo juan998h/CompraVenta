@@ -10,6 +10,10 @@ public interface CompraRepository {
     void guardar(Compra compra);
     boolean existeCompraActiva(String compradorId, String repuestoId);
     boolean existeCompraActivaDelRepuesto(String repuestoId);
+
+    /** Compras de un comprador, de la mas reciente a la mas antigua. */
+    List<Compra> obtenerPorComprador(String compradorId);
+
     List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite);
 
     /** Ranking de repuestos por compras COMPLETADAS (une compras con repuestos). */
