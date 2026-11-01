@@ -21,29 +21,41 @@ import java.nio.charset.StandardCharsets;
 @EnableWebSecurity
 public class SeguridadConfig {
 
+    // Aqui se define quien puede entrar a cada ruta
     @Bean
     public SecurityFilterChain filtroDeSeguridad(HttpSecurity http) throws Exception {
         http
+                // CSRF se desactiva porque la API usa tokens y no sesiones de navegador
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
+                // Sin sesiones: cada peticion trae su token
+                .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(rutas -> rutas
+                        // Swagger se puede abrir sin token
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Solo el COMPRADOR puede comprar
                         .requestMatchers(HttpMethod.POST, "/api/compras").hasAuthority("COMPRADOR")
+                        // Solo el ADMIN puede confirmar un pago
                         .requestMatchers(HttpMethod.PUT, "/api/compras/*/confirmar").hasAuthority("ADMIN")
+                        // Lo demas pide estar autenticado
                         .anyRequest().authenticated())
+                // Revisa el token JWT que llega en cada peticion
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(convertidorDeRoles())));
         return http.build();
     }
 
+    // Lee los roles que trae el token (campo "roles") para usarlos en hasAuthority
     private JwtAuthenticationConverter convertidorDeRoles() {
         JwtGrantedAuthoritiesConverter autoridades = new JwtGrantedAuthoritiesConverter();
         autoridades.setAuthoritiesClaimName("roles");
         autoridades.setAuthorityPrefix("");
+
         JwtAuthenticationConverter convertidor = new JwtAuthenticationConverter();
         convertidor.setJwtGrantedAuthoritiesConverter(autoridades);
         return convertidor;
     }
 
+    // Verifica la firma del token con la clave secreta que esta en application.properties
     @Bean
     public JwtDecoder jwtDecoder(@Value("${seguridad.jwt.secreto}") String secreto) {
         SecretKey llave = new SecretKeySpec(secreto.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
