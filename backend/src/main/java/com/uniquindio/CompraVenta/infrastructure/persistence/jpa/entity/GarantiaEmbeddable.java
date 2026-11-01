@@ -1,0 +1,20 @@
+package com.uniquindio.CompraVenta.infrastructure.persistence.jpa.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Embeddable
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+public class GarantiaEmbeddable {
+
+    @Column(name = "meses_garantia", nullable = false)
+    private int mesesCobertura;
+
+    @Column(name = "condiciones_garantia", length = 255)
+    private String condicionesFabricante;
+}
