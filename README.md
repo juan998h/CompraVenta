@@ -51,14 +51,38 @@ Sin token responde 401. Con un rol sin permiso responde 403. El comprador y el v
 | El constructor no puede tener lógica | Los constructores solo asignan campos. Las validaciones pasaron a los metodos  (publicar, realizar, registrar). Para cargar desde la base de datos se agregó reconstruir, que no valida | Compra, Repuesto y VendedorEspecializado (domain/entity) |
 | Repuesto debe tener más lógica, porque es la raíz del agregado más grande | Repuesto ahora protege sus propias reglas con renombrar, cambiarPrecio, actualizarGarantia, agregarModeloCompatible, quitarModeloCompatible, venderUnidad, eliminarLogicamente, reactivar y verificarQueLoPuedeEliminar | Repuesto (domain/entity) y docs/invariantes.md |
 
-## Pruebas
+## Pruebas avanzadas
 
 Todas siguen preparar, ejecutar y verificar, y se corren con ./gradlew test.
 
-- **Seguridad de un endpoint:** confirmar un pago sin token da 401, con rol COMPRADOR da 403 y con ADMIN da 200. Se usa jwt() de spring-security-test y @SpringBootTest. CSRF está desactivado porque la API usa tokens y no sesiones.
-- **@DataJpaTest vs @SpringBootTest:** @DataJpaTest solo carga la parte de datos con H2 y revierte los cambios, por eso es más rápido. @SpringBootTest carga casi toda la aplicación. En Spring Boot 4 la anotación cambió de paquete y hubo que agregar spring-boot-starter-data-jpa-test y @Import para los repositorios.
-- **Integración:** se compra un repuesto y se confirma el pago pasando por controller, caso de uso, repositorio y base de datos, sin Mockito. Se revisa que la compra quede completada con el precio que tenía el repuesto.
-- **Login y roles:** se hace login real y se usa el token. Un comprador no puede verificar vendedores (403), un vendedor no puede comprar (403), un token inventado da 401 y el admin sí puede verificar.
+### 1. Probar un endpoint con seguridad
+Probamos la ruta que confirma un pago, que es solo para el administrador.
+Hicimos tres pruebas sobre la misma ruta.
+Sin token responde 401, porque el sistema no sabe quién es el usuario.
+Con token de COMPRADOR responde 403, porque sabe quién es pero no tiene permiso.
+Con token de ADMIN responde 200 y la compra se confirma.
+Para no hacer login en cada prueba usamos jwt() de spring-security-test, que simula un usuario con un rol.
+Usamos @SpringBootTest porque necesitamos la seguridad real cargada.
+CSRF está desactivado porque la API usa tokens y no sesiones.
+
+### 2. @DataJpaTest contra @SpringBootTest
+@DataJpaTest solo carga la parte de datos: las entidades, los repositorios y una base H2 en memoria.
+Al terminar cada prueba deshace los cambios, así que los datos no se mezclan entre pruebas.
+Por eso es más rápido y es ideal para probar un repositorio.
+@SpringBootTest carga casi toda la aplicación: controllers, casos de uso, seguridad y base de datos.
+Es más lento, pero sirve cuando queremos probar varias partes juntas.
+En Spring Boot 4 @DataJpaTest cambió de paquete y necesita un starter de pruebas aparte.
+Lo resolvimos agregando spring-boot-starter-data-jpa-test en el build.gradle.
+También usamos @Import para traer nuestros repositorios, porque esta anotación no los carga sola.
+
+### 3. Una prueba de integración
+Nuestra prueba compra un repuesto y confirma el pago.
+Recorre el sistema real: controller, caso de uso, repositorio y base de datos, sin simular nada.
+Al final revisamos que la compra quede completada con el precio que tenía el repuesto.
+Una prueba unitaria revisa una sola clase aislada, y lo que no es suyo se simula con Mockito.
+Es rápida y cuando falla sabemos exactamente dónde está el error.
+La de integración comprueba que las piezas funcionan bien juntas, pero es más lenta y si falla cuesta más ubicar el error.
+Conviene usar unitarias para las reglas del negocio y de integración para los flujos importantes.
 
 ## Mejoras pendientes
 
