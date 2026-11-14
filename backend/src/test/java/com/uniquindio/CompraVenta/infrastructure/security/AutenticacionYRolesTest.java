@@ -79,13 +79,14 @@ class AutenticacionYRolesTest {
     }
 
     @Test
-    void registroConCorreoRepetidoResponde422() throws Exception {
+    void registroConCorreoRepetidoResponde409() throws Exception {
         mockMvc.perform(post("/api/auth/registro")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"correo\":\"anamaria1996@bikers.com\",\"contrasena\":\"Clave12345\","
                                 + "\"nombre\":\"Otra Ana\",\"rol\":\"COMPRADOR\"}"))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
+
 
     @Test
     void registroConContrasenaSinMayusculaNiNumeroResponde400() throws Exception {
