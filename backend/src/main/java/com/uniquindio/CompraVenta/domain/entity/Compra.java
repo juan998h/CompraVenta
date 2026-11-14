@@ -3,7 +3,7 @@ package com.uniquindio.CompraVenta.domain.entity;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.valueobject.EstadoCompra;
 import com.uniquindio.CompraVenta.domain.valueobject.Precio;
-
+import com.uniquindio.CompraVenta.domain.exception.AccesoDenegadoException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -91,7 +91,13 @@ public class Compra {
             this.fechaDescarga = ahora;
         }
     }
-
+    public void verificarQueEsDe(String compradorIdQueSolicita) {
+        if (!compradorId.equals(compradorIdQueSolicita)) {
+            throw new AccesoDenegadoException(
+                    "Solo el comprador de esta compra puede gestionarla."
+            );
+        }
+    }
     public void solicitarReembolso(String motivo, LocalDateTime ahora) {
         if (estado != EstadoCompra.COMPLETADA) {
             throw new ReglaDominioException("Solo una compra completada puede reembolsarse.");
