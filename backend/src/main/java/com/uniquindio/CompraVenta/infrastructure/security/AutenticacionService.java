@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
-
+import com.uniquindio.CompraVenta.domain.exception.RecursoYaExisteException;
 /**
  * Registro e inicio de sesion. Las contrasenas se guardan con BCrypt:
  * nunca se guarda ni se devuelve la contrasena real. En el login, el AuthenticationManager
@@ -67,8 +67,7 @@ public class AutenticacionService {
             throw new ReglaDominioException("No se puede registrar un administrador.");
         }
         if (usuarios.existsByCorreo(solicitud.correo())) {
-            throw new ReglaDominioException("Ya existe un usuario con ese correo.");
-        }
+            throw new RecursoYaExisteException("Ya existe un usuario con ese correo.");        }
         String id = UUID.randomUUID().toString();
         if (solicitud.rol() == RolUsuario.VENDEDOR) {
             if (solicitud.especialidad() == null) {
