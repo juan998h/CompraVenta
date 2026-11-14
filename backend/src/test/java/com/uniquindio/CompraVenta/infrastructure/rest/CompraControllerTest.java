@@ -6,6 +6,7 @@ import com.uniquindio.CompraVenta.application.usecase.RealizarCompraUseCase;
 import com.uniquindio.CompraVenta.application.usecase.RegistrarDescargaUseCase;
 import com.uniquindio.CompraVenta.application.usecase.SolicitarReembolsoUseCase;
 import com.uniquindio.CompraVenta.domain.entity.Compra;
+import com.uniquindio.CompraVenta.domain.exception.AccesoDenegadoException;
 import com.uniquindio.CompraVenta.domain.exception.RecursoNoEncontradoException;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.valueobject.Precio;
@@ -211,5 +212,32 @@ class CompraControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].compraId").value("id-1"))
                 .andExpect(jsonPath("$[0].compradorId").value("ana"));
+    }
+
+    @Test
+    void deberiaResponder403SiLaCompraNoEsDelUsuario() throws Exception {
+        when(solicitarReembolso.ejecutar(
+                eq("id-1"), eq("otro"), any(), any()))
+                .thenThrow(new AccesoDenegadoException(
+                        "Solo el comprador de esta compra puede gestionarla."));
+
+        mockMvc.perform(put("/api/compras/id-1/reembolso")
+                        .principal(() -> "otro")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"motivo\":\"Ya no lo quiero\"}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.mensaje").value(
+                        "Solo el comprador de esta compra puede gestionarla."));
+    }
+
+    @Test
+    void deberiaResponder403AlDescargarUnaCompraAjena() throws Exception {
+        when(registrarDescarga.ejecutar(eq("id-1"), eq("otro"), any()))
+                .thenThrow(new AccesoDenegadoException(
+                        "Solo el comprador de esta compra puede gestionarla."));
+
+        mockMvc.perform(put("/api/compras/id-1/descarga")
+                        .principal(() -> "otro"))
+                .andExpect(status().isForbidden());
     }
 }
