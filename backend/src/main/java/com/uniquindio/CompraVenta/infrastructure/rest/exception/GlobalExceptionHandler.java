@@ -10,7 +10,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
+import com.uniquindio.CompraVenta.domain.exception.RecursoYaExisteException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  * 422 se rompio una regla de negocio
  * 400 datos mal enviados.
  * (401 y 403 los responde la seguridad)
+ * * 409 el recurso ya existe
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,6 +31,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> manejarNoEncontrado(RecursoNoEncontradoException ex) {
         return construirRespuesta(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
+
+    @ExceptionHandler(RecursoYaExisteException.class)
+    public ResponseEntity<Map<String, Object>> manejarYaExiste(
+            RecursoYaExisteException ex) {
+
+        return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
 
     @ExceptionHandler(ReglaDominioException.class)
     public ResponseEntity<Map<String, Object>> manejarReglaDominio(ReglaDominioException ex) {
