@@ -51,6 +51,9 @@ Sin token responde 401. Con un rol sin permiso responde 403. El comprador y el v
 | El constructor no puede tener lógica | Los constructores solo asignan campos. Las validaciones pasaron a los metodos  (publicar, realizar, registrar). Para cargar desde la base de datos se agregó reconstruir, que no valida | Compra, Repuesto y VendedorEspecializado (domain/entity) |
 | Repuesto debe tener más lógica, porque es la raíz del agregado más grande | Repuesto ahora protege sus propias reglas con renombrar, cambiarPrecio, actualizarGarantia, agregarModeloCompatible, quitarModeloCompatible, venderUnidad, eliminarLogicamente, reactivar y verificarQueLoPuedeEliminar | Repuesto (domain/entity) y docs/invariantes.md |
 
+| El registro con correo repetido respondia 422 | Se lanza RecursoYaExisteException y se responde 409 | AutenticacionService y GlobalExceptionHandler |
+| Otro comprador podia descargar o pedir reembolso de compras ajenas | Se verifica el comprador del token y se responde 403 si no es el dueno | Compra, casos de uso, CompraController y GlobalExceptionHandler |
+
 ## Pruebas avanzadas
 
 Todas siguen preparar, ejecutar y verificar, y se corren con ./gradlew test.
@@ -87,4 +90,3 @@ Conviene usar unitarias para las reglas del negocio y de integración para los f
 ## Mejoras pendientes
 
 - Conectar MariaDB en lugar de H2.
-- Verificar que la compra que se confirma, descarga o reembolsa pertenezca al usuario con sesión.

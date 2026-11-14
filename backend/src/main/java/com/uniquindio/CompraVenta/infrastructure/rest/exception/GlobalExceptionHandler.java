@@ -1,5 +1,6 @@
 package com.uniquindio.CompraVenta.infrastructure.rest.exception;
 
+import com.uniquindio.CompraVenta.domain.exception.AccesoDenegadoException;
 import com.uniquindio.CompraVenta.domain.exception.RecursoNoEncontradoException;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
  * 404 no existe
  * 422 se rompio una regla de negocio
  * 400 datos mal enviados.
- * (401 y 403 los responde la seguridad)
+ * 403 la compra no es del usuario (o el rol no tiene permiso)
+ * 401 lo responde la seguridad
  * * 409 el recurso ya existe
  */
 @RestControllerAdvice
@@ -44,6 +46,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ReglaDominioException.class)
     public ResponseEntity<Map<String, Object>> manejarReglaDominio(ReglaDominioException ex) {
         return construirRespuesta(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+    }
+
+    @ExceptionHandler(AccesoDenegadoException.class)
+    public ResponseEntity<Map<String, Object>> manejarAccesoDenegado(
+            AccesoDenegadoException ex) {
+        return construirRespuesta(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

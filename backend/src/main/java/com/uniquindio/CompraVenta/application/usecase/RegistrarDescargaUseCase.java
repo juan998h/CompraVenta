@@ -14,9 +14,13 @@ public class RegistrarDescargaUseCase {
         this.repository = repository;
     }
 
-    public Compra ejecutar(String compraId, LocalDateTime ahora) {
+    public Compra ejecutar(String compraId, String compradorId, LocalDateTime ahora) {
         Compra compra = repository.obtenerPorId(compraId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No existe la compra indicada."));
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No existe la compra indicada."
+                ));
+
+        compra.verificarQueEsDe(compradorId);
         compra.registrarDescarga(ahora);
         repository.guardar(compra);
         return compra;
