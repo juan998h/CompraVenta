@@ -1,5 +1,6 @@
 package com.uniquindio.CompraVenta.domain.entity;
 
+import com.uniquindio.CompraVenta.domain.exception.AccesoDenegadoException;
 import com.uniquindio.CompraVenta.domain.exception.ReglaDominioException;
 import com.uniquindio.CompraVenta.domain.valueobject.EstadoCompra;
 import com.uniquindio.CompraVenta.domain.valueobject.Precio;
@@ -115,5 +116,18 @@ class CompraTest {
                 compra.registrarDescarga(FECHA.plusDays(2)));
         assertEquals(EstadoCompra.REEMBOLSADA, compra.getEstado()); // no cambio el estado
         assertFalse(compra.fueDescargada());                        // no se registro nada
+    }
+
+    @Test
+    void noDebePermitirQueOtroCompradorGestioneLaCompra() {
+        Compra compra = compraPendiente("1");
+        assertThrows(AccesoDenegadoException.class,
+                () -> compra.verificarQueEsDe("otro-comprador"));
+    }
+
+    @Test
+    void permiteQueElCompradorGestioneSuPropiaCompra() {
+        Compra compra = compraPendiente("1");
+        assertDoesNotThrow(() -> compra.verificarQueEsDe("comprador-1"));
     }
 }
