@@ -14,9 +14,14 @@ public class SolicitarReembolsoUseCase {
         this.repository = repository;
     }
 
-    public Compra ejecutar(String compraId, String motivo, LocalDateTime ahora) {
+    public Compra ejecutar(String compraId, String compradorId,
+                           String motivo, LocalDateTime ahora) {
         Compra compra = repository.obtenerPorId(compraId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No existe la compra indicada."));
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No existe la compra indicada."
+                ));
+
+        compra.verificarQueEsDe(compradorId);
         compra.solicitarReembolso(motivo, ahora);
         repository.guardar(compra);
         return compra;
