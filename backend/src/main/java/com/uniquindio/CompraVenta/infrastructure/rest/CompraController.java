@@ -89,15 +89,25 @@ public class CompraController {
 
     @PutMapping("/{id}/descarga")
     @Operation(summary = "Registra la descarga del archivo (bloquea el reembolso)")
-    public CompraResponse descargar(@PathVariable("id") String id) {
-        return mapper.aResponse(registrarDescarga.ejecutar(id, LocalDateTime.now()));
+    public CompraResponse descargar(@PathVariable("id") String id,
+                                    Principal principal) {
+        return mapper.aResponse(registrarDescarga.ejecutar(
+                id, principal.getName(), LocalDateTime.now()
+        ));
     }
 
     @PutMapping("/{id}/reembolso")
-    @Operation(summary = "Solicita el reembolso de una compra",
-            description = "Reglas: compra COMPLETADA, dentro de 5 dias, sin descarga y con motivo.")
-    public CompraResponse reembolsar(@PathVariable("id") String id,
-                                     @Valid @RequestBody SolicitarReembolsoRequest request) {
-        return mapper.aResponse(solicitarReembolso.ejecutar(id, request.motivo(), LocalDateTime.now()));
+    @Operation(
+            summary = "Solicita el reembolso de una compra",
+            description = "Reglas: compra COMPLETADA, dentro de 5 dias, sin descarga "
+                    + "y con motivo. Solo la puede pedir quien hizo la compra."
+    )
+    public CompraResponse reembolsar(
+            @PathVariable("id") String id,
+            @Valid @RequestBody SolicitarReembolsoRequest request,
+            Principal principal) {
+        return mapper.aResponse(solicitarReembolso.ejecutar(
+                id, principal.getName(), request.motivo(), LocalDateTime.now()
+        ));
     }
 }
