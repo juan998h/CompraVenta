@@ -146,10 +146,10 @@ class CompraControllerTest {
         Compra completada = compraPendiente();
         completada.completar();
         completada.registrarDescarga(LocalDateTime.of(2026, 10, 2, 9, 0));
-        when(registrarDescarga.ejecutar(eq("id-1"), any())).thenReturn(completada);
+        when(registrarDescarga.ejecutar(eq("id-1"), eq("ana"), any())).thenReturn(completada);
 
         // Act & Assert
-        mockMvc.perform(put("/api/compras/id-1/descarga"))
+        mockMvc.perform(put("/api/compras/id-1/descarga").principal(() -> "ana"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.fechaDescarga").exists());
     }
@@ -160,10 +160,10 @@ class CompraControllerTest {
         Compra reembolsada = compraPendiente();
         reembolsada.completar();
         reembolsada.solicitarReembolso("No era compatible", LocalDateTime.of(2026, 10, 2, 9, 0));
-        when(solicitarReembolso.ejecutar(eq("id-1"), eq("No era compatible"), any())).thenReturn(reembolsada);
+        when(solicitarReembolso.ejecutar(eq("id-1"), eq("ana"), eq("No era compatible"), any())).thenReturn(reembolsada);
 
         // Act & Assert
-        mockMvc.perform(put("/api/compras/id-1/reembolso")
+        mockMvc.perform(put("/api/compras/id-1/reembolso").principal(() -> "ana")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 { "motivo": "No era compatible" }
@@ -175,24 +175,24 @@ class CompraControllerTest {
     @Test
     void noDeberiaSolicitarElReembolsoSinMotivo() throws Exception {
         // Act & Assert
-        mockMvc.perform(put("/api/compras/id-1/reembolso")
+        mockMvc.perform(put("/api/compras/id-1/reembolso").principal(() -> "ana")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 { "motivo": "" }
                                 """))
                 .andExpect(status().isBadRequest());
 
-        verify(solicitarReembolso, never()).ejecutar(any(), any(), any());
+        verify(solicitarReembolso, never()).ejecutar(any(), any(), any(), any());
     }
 
     @Test
     void deberiaResponder422SiElReembolsoRompeUnaRegla() throws Exception {
         // Arrange
-        when(solicitarReembolso.ejecutar(any(), any(), any()))
+        when(solicitarReembolso.ejecutar(any(), any(), any(), any()))
                 .thenThrow(new ReglaDominioException("El plazo de reembolso ya vencio."));
 
         // Act & Assert
-        mockMvc.perform(put("/api/compras/id-1/reembolso")
+        mockMvc.perform(put("/api/compras/id-1/reembolso").principal(() -> "ana")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 { "motivo": "Ya no lo quiero" }

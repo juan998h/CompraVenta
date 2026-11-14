@@ -41,7 +41,7 @@ class RecursoNoEncontradoEnCasosDeUsoTest {
 
         // Act & Assert
         assertThrows(RecursoNoEncontradoException.class,
-                () -> useCase.ejecutar("no-existe", LocalDateTime.now()));
+                () -> useCase.ejecutar("no-existe", "comprador-1", LocalDateTime.now()));
         verify(compraRepository, never()).guardar(any(Compra.class));
     }
 
@@ -52,7 +52,7 @@ class RecursoNoEncontradoEnCasosDeUsoTest {
 
         // Act & Assert
         assertThrows(RecursoNoEncontradoException.class,
-                () -> useCase.ejecutar("no-existe", "No me sirvio", LocalDateTime.now()));
+                () -> useCase.ejecutar("no-existe", "comprador-1", "No me sirvio", LocalDateTime.now()));
         verify(compraRepository, never()).guardar(any(Compra.class));
     }
 
