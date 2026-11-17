@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,12 +17,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +46,8 @@ public class SeguridadConfig {
                         "Su rol no tiene permiso para usar este recurso.");
 
         http
+                // Permite que el frontend de Angular (otro puerto) llame a la API
+                .cors(Customizer.withDefaults())
                 // CSRF se desactiva porque la API usa tokens y no sesiones de navegador
                 .csrf(csrf -> csrf.disable())
                 .headers(encabezados -> encabezados.frameOptions(marco -> marco.sameOrigin()))
@@ -83,6 +89,19 @@ public class SeguridadConfig {
                         .accessDeniedHandler(sinPermiso));
 
         return http.build();
+    }
+
+    // Dice desde donde se puede llamar a la API: el frontend de Angular en el puerto 4200
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration reglas = new CorsConfiguration();
+        reglas.setAllowedOrigins(List.of("http://localhost:4200"));
+        reglas.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        reglas.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        UrlBasedCorsConfigurationSource fuente = new UrlBasedCorsConfigurationSource();
+        fuente.registerCorsConfiguration("/api/**", reglas);
+        return fuente;
     }
 
     // Escribe el error en formato JSON: fecha, codigo y mensaje
