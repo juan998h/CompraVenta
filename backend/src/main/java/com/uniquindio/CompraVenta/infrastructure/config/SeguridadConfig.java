@@ -78,6 +78,7 @@ public class SeguridadConfig {
                         .requestMatchers("/api/reportes/**").hasAnyAuthority("VENDEDOR", "ADMIN")
 
                         // Todo lo demas pide estar autenticado
+                        .requestMatchers("/api/favoritos", "/api/favoritos/**").hasAuthority("COMPRADOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(errores -> errores
                         .authenticationEntryPoint(sinSesion)
