@@ -1,4 +1,10 @@
-﻿import { CurrencyPipe } from '@angular/common';
+﻿import { HttpErrorResponse } from '@angular/common/http';
+import { AvisoService } from '../../services/aviso.service';
+import { CompraService } from '../../services/compra.service';
+import { traducirError } from '../../services/errores';
+import { SesionService } from '../../services/sesion.service';
+
+import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
@@ -71,6 +77,17 @@ interface Consulta {
                     </span>
                   }
                 </div>
+                @if (sesion.tieneRol('COMPRADOR')) {
+                  <div class="card-footer bg-transparent border-0 pb-3">
+                    <button
+                      class="btn btn-primary w-100"
+                      [disabled]="comprando() === r.repuestoId"
+                      (click)="comprar(r)"
+                    >
+                      {{ comprando() === r.repuestoId ? 'Comprando...' : 'Comprar' }}
+                    </button>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -97,6 +114,11 @@ interface Consulta {
 })
 export class Catalogo {
   private repuestos = inject(RepuestoService);
+  private compras = inject(CompraService);
+  private avisos = inject(AvisoService);
+  sesion = inject(SesionService);
+
+  comprando = signal<string | null>(null);
 
   readonly tamano = 3;
 
@@ -143,7 +165,25 @@ export class Catalogo {
     this.consulta.update((c) => ({ ...c, pagina }));
   }
 
+  comprar(repuesto: RepuestoResponse): void {
+    this.comprando.set(repuesto.repuestoId);
+
+    this.compras.comprar({ repuestoId: repuesto.repuestoId }).subscribe({
+      next: () => {
+        this.comprando.set(null);
+        this.avisos.exito(
+          `Compraste "${repuesto.nombre}". Queda pendiente de confirmar el pago.`
+        );
+      },
+      error: (error: HttpErrorResponse) => {
+        this.comprando.set(null);
+        this.avisos.error(traducirError(error));
+      }
+    });
+  }
+
   reintentar(): void {
     this.consulta.update((c) => ({ ...c }));
   }
 }
+

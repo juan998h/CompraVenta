@@ -33,6 +33,15 @@ import { SesionService } from '../../services/sesion.service';
                 >Catalogo</a>
               </li>
             }
+                      @if (sesion.haySesionActiva() && sesion.tieneRol('VENDEDOR')) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/publicar"
+                  routerLinkActive="active"
+                >Publicar</a>
+              </li>
+            }
           </ul>
 
           @if (sesion.haySesionActiva()) {
@@ -59,3 +68,4 @@ import { SesionService } from '../../services/sesion.service';
 export class Navbar {
   sesion = inject(SesionService);
 }
+
