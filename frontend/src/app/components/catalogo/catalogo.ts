@@ -1,4 +1,5 @@
-﻿import { HttpErrorResponse } from '@angular/common/http';
+﻿import { FavoritoService } from '../../services/favorito.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AvisoService } from '../../services/aviso.service';
 import { CompraService } from '../../services/compra.service';
 import { traducirError } from '../../services/errores';
@@ -78,13 +79,21 @@ interface Consulta {
                   }
                 </div>
                 @if (sesion.tieneRol('COMPRADOR')) {
-                  <div class="card-footer bg-transparent border-0 pb-3">
+                  <div class="card-footer bg-transparent border-0 pb-3 d-flex gap-2">
                     <button
-                      class="btn btn-primary w-100"
+                      class="btn btn-primary flex-grow-1"
                       [disabled]="comprando() === r.repuestoId"
                       (click)="comprar(r)"
                     >
                       {{ comprando() === r.repuestoId ? 'Comprando...' : 'Comprar' }}
+                    </button>
+                    <button
+                      class="btn"
+                      [class.btn-danger]="favoritosIds().has(r.repuestoId)"
+                      [class.btn-outline-danger]="!favoritosIds().has(r.repuestoId)"
+                      (click)="alternarFavorito(r)"
+                    >
+                      {{ favoritosIds().has(r.repuestoId) ? 'Quitar' : 'Favorito' }}
                     </button>
                   </div>
                 }
@@ -120,6 +129,9 @@ export class Catalogo {
 
   comprando = signal<string | null>(null);
 
+  private favoritos = inject(FavoritoService);
+  favoritosIds = signal<Set<string>>(new Set());
+
   readonly tamano = 3;
 
   texto = signal('');
@@ -130,6 +142,15 @@ export class Catalogo {
   hayError = signal(false);
 
   constructor() {
+    if (this.sesion.tieneRol('COMPRADOR')) {
+      this.favoritos.listar().subscribe({
+        next: (lista) => this.favoritosIds.set(
+          new Set(lista.map((r) => r.repuestoId))
+        ),
+        error: (error: HttpErrorResponse) =>
+          this.avisos.error(traducirError(error))
+      });
+    }
     toObservable(this.texto)
       .pipe(
         skip(1),
@@ -182,8 +203,39 @@ export class Catalogo {
     });
   }
 
+  alternarFavorito(repuesto: RepuestoResponse): void {
+    const id = repuesto.repuestoId;
+    const esFavorito = this.favoritosIds().has(id);
+    const peticion = esFavorito
+      ? this.favoritos.quitar(id)
+      : this.favoritos.agregar(id);
+
+    peticion.subscribe({
+      next: () => {
+        this.favoritosIds.update((ids) => {
+          const nuevos = new Set(ids);
+          if (esFavorito) {
+            nuevos.delete(id);
+          } else {
+            nuevos.add(id);
+          }
+          return nuevos;
+        });
+
+        this.avisos.exito(
+          esFavorito
+            ? 'Quitado de tus favoritos.'
+            : 'Agregado a tus favoritos.'
+        );
+      },
+      error: (error: HttpErrorResponse) =>
+        this.avisos.error(traducirError(error))
+    });
+  }
+
   reintentar(): void {
     this.consulta.update((c) => ({ ...c }));
   }
 }
+
 

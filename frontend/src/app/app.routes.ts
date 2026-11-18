@@ -2,6 +2,7 @@
 import { Catalogo } from './components/catalogo/catalogo';
 import { Login } from './components/login/login';
 import { Publicar } from './components/publicar/publicar';
+import { Favoritos } from './components/favoritos/favoritos';
 import { autenticadoGuard } from './guards/autenticado.guard';
 import { invitadoGuard } from './guards/invitado.guard';
 import { rolGuard } from './guards/rol.guard';
@@ -14,6 +15,11 @@ export const routes: Routes = [
     path: 'publicar',
     component: Publicar,
     canActivate: [autenticadoGuard, rolGuard('VENDEDOR')]
+  },
+  {
+    path: 'favoritos',
+    component: Favoritos,
+    canActivate: [autenticadoGuard, rolGuard('COMPRADOR')]
   },
   { path: '**', redirectTo: 'catalogo' }
 ];
