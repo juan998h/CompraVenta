@@ -42,6 +42,15 @@ import { SesionService } from '../../services/sesion.service';
                 >Publicar</a>
               </li>
             }
+                      @if (sesion.haySesionActiva() && sesion.tieneRol('COMPRADOR')) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/favoritos"
+                  routerLinkActive="active"
+                >Favoritos</a>
+              </li>
+            }
           </ul>
 
           @if (sesion.haySesionActiva()) {
@@ -68,4 +77,5 @@ import { SesionService } from '../../services/sesion.service';
 export class Navbar {
   sesion = inject(SesionService);
 }
+
 

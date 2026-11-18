@@ -1,5 +1,10 @@
 package com.uniquindio.CompraVenta.infrastructure.config;
 
+import com.uniquindio.CompraVenta.application.usecase.AgregarFavoritoUseCase;
+import com.uniquindio.CompraVenta.application.usecase.QuitarFavoritoUseCase;
+import com.uniquindio.CompraVenta.application.usecase.ListarFavoritosUseCase;
+import com.uniquindio.CompraVenta.domain.repository.FavoritoRepository;
+
 import com.uniquindio.CompraVenta.application.usecase.BuscarRepuestosCompatiblesUseCase;
 import com.uniquindio.CompraVenta.application.usecase.ConfirmarPagoUseCase;
 import com.uniquindio.CompraVenta.application.usecase.ConsultarHistorialDeComprasUseCase;
@@ -107,5 +112,31 @@ public class CasosDeUsoConfig {
     public ConsultarRepuestosMasVendidosUseCase consultarRepuestosMasVendidosUseCase(
             CompraRepository compraRepository) {
         return new ConsultarRepuestosMasVendidosUseCase(compraRepository);
+    }
+
+    // ---------- Favoritos del comprador ----------
+
+    @Bean
+    public AgregarFavoritoUseCase agregarFavoritoUseCase(
+            FavoritoRepository favoritoRepository,
+            RepuestoRepository repuestoRepository) {
+        return new AgregarFavoritoUseCase(
+            favoritoRepository, repuestoRepository
+        );
+    }
+
+    @Bean
+    public QuitarFavoritoUseCase quitarFavoritoUseCase(
+            FavoritoRepository favoritoRepository) {
+        return new QuitarFavoritoUseCase(favoritoRepository);
+    }
+
+    @Bean
+    public ListarFavoritosUseCase listarFavoritosUseCase(
+            FavoritoRepository favoritoRepository,
+            RepuestoRepository repuestoRepository) {
+        return new ListarFavoritosUseCase(
+            favoritoRepository, repuestoRepository
+        );
     }
 }
