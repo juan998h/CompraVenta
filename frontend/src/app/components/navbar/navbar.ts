@@ -24,18 +24,32 @@ import { SesionService } from '../../services/sesion.service';
 
         <div class="collapse navbar-collapse" id="menuPrincipal">
           <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/catalogo" routerLinkActive="active">Catalogo</a>
-            </li>
+            @if (sesion.haySesionActiva()) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/catalogo"
+                  routerLinkActive="active"
+                >Catalogo</a>
+              </li>
+            }
           </ul>
 
           @if (sesion.haySesionActiva()) {
-            <span class="navbar-text me-3">{{ sesion.roles().join(', ') }}</span>
-            <button type="button" class="btn btn-outline-light" (click)="sesion.cerrarSesion()">
+            <span class="navbar-text me-3">
+              {{ sesion.roles().join(', ') }}
+            </span>
+            <button
+              type="button"
+              class="btn btn-outline-light"
+              (click)="sesion.cerrarSesion()"
+            >
               Cerrar sesion
             </button>
           } @else {
-            <a class="btn btn-outline-light" routerLink="/login">Iniciar sesion</a>
+            <a class="btn btn-outline-light" routerLink="/login">
+              Iniciar sesion
+            </a>
           }
         </div>
       </div>
