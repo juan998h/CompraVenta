@@ -50,7 +50,6 @@ Sin token responde 401. Con un rol sin permiso responde 403. El comprador y el v
 |---|---|---|
 | El constructor no puede tener lógica | Los constructores solo asignan campos. Las validaciones pasaron a los metodos  (publicar, realizar, registrar). Para cargar desde la base de datos se agregó reconstruir, que no valida | Compra, Repuesto y VendedorEspecializado (domain/entity) |
 | Repuesto debe tener más lógica, porque es la raíz del agregado más grande | Repuesto ahora protege sus propias reglas con renombrar, cambiarPrecio, actualizarGarantia, agregarModeloCompatible, quitarModeloCompatible, venderUnidad, eliminarLogicamente, reactivar y verificarQueLoPuedeEliminar | Repuesto (domain/entity) y docs/invariantes.md |
-
 | El registro con correo repetido respondia 422 | Se lanza RecursoYaExisteException y se responde 409 | AutenticacionService y GlobalExceptionHandler |
 | Otro comprador podia descargar o pedir reembolso de compras ajenas | Se verifica el comprador del token y se responde 403 si no es el dueno | Compra, casos de uso, CompraController y GlobalExceptionHandler |
 
@@ -90,3 +89,52 @@ Conviene usar unitarias para las reglas del negocio y de integración para los f
 ## Mejoras pendientes
 
 - Conectar MariaDB en lugar de H2.
+
+## Frontend (Entrega 3)
+
+Aplicación Angular conectada al backend de Bikers Dreams. En la aplicación la marca se ve como "Sueños de motociclistas". Permite iniciar sesión con JWT, ver el catálogo de repuestos con búsqueda y paginación, publicar repuestos (vendedor), comprar y guardar favoritos (comprador). Usa Bootstrap 5 y es responsive.
+
+### Cómo ejecutar el frontend
+
+1. Tener el backend corriendo (ver "Cómo ejecutar" arriba) en http://localhost:8080.
+2. Abrir otra terminal y entrar a la carpeta frontend.
+3. Ejecutar npm install (solo la primera vez).
+4. Ejecutar ng serve.
+5. Abrir http://localhost:4200 en el navegador.
+
+El backend acepta peticiones desde http://localhost:4200 (CORS configurado en SeguridadConfig).
+
+### Usuarios de prueba
+
+Son los mismos de la tabla de arriba. Para probar el frontend:
+
+- Comprador: anamaria1996@bikers.com / Comprador123*
+- Vendedor: motopartsSAS@bikers.com / Vendedor123*
+
+### Pantallas
+
+| Pantalla | Ruta | Quién entra |
+|---|---|---|
+| Login | /login | Solo quien no tiene sesión |
+| Catálogo (búsqueda, paginación, comprar, favorito) | /catalogo | Cualquier usuario con sesión |
+| Publicar repuesto | /publicar | VENDEDOR |
+| Favoritos | /favoritos | COMPRADOR |
+
+### Cómo está organizado
+
+- services: acceso al backend (auth, repuestos, compras, favoritos), sesión y avisos.
+- interceptors: agrega el token a cada petición y, si el backend responde 401, cierra la sesión y avisa.
+- guards: autenticado, invitado y rol.
+- components: login, navbar, catálogo, publicar, favoritos y avisos.
+- La URL del backend está en environments (apiUrl).
+
+### Funcionalidad propia: favoritos
+
+El comprador marca repuestos como favoritos. Se guarda en el backend (/api/favoritos, solo COMPRADOR) y sigue ahí al recargar la página mientras el backend esté corriendo, porque la base de datos es H2 en memoria.
+
+### División del trabajo
+
+| Integrante | Usuario de GitHub | Qué hizo |
+|---|---|---|
+| Juan Daniel Vera | juandanielvera | Configuración del frontend, CORS, modelos y servicios, login con JWT, interceptor, navbar, avisos, diseño visual (fotos, portada y estilo personalizado) |
+| Juan Esteban Guitierrez | juan998h | Guards, catálogo con paginación y búsqueda, publicar y comprar, favoritos (backend y frontend) |
