@@ -1,4 +1,4 @@
-﻿import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenResponse } from '../models/token-response';
 
@@ -13,6 +13,7 @@ export class SesionService {
   readonly token = signal<string | null>(this.leerToken());
   readonly roles = signal<string[]>(this.leerRoles());
   readonly haySesionActiva = computed(() => this.token() !== null);
+  readonly usuarioId = computed(() => this.leerUsuarioId(this.token()));
 
   guardarSesion(respuesta: TokenResponse): void {
     localStorage.setItem(CLAVE_TOKEN, respuesta.token);
@@ -32,6 +33,21 @@ export class SesionService {
 
   tieneRol(rol: string): boolean {
     return this.roles().includes(rol);
+  }
+
+  private leerUsuarioId(token: string | null): string | null {
+    if (!token) return null;
+
+    try {
+      const cuerpo = token.split('.')[1]
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+      const base64 = cuerpo.padEnd(Math.ceil(cuerpo.length / 4) * 4, '=');
+      const datos = JSON.parse(atob(base64));
+      return typeof datos.sub === 'string' ? datos.sub : null;
+    } catch {
+      return null;
+    }
   }
 
   private leerToken(): string | null {
