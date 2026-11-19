@@ -92,6 +92,52 @@ Conviene usar unitarias para las reglas del negocio y de integración para los f
 
 ## Frontend (Entrega 3)
 
+<!-- frontend-entrega3-final -->
+
+### Pantallas disponibles
+
+| Pantalla | Acceso | Funcion |
+|---|---|---|
+| Login | Sin sesion | Autentica y guarda el JWT |
+| Registro | Sin sesion | Crea compradores y vendedores; exige especialidad al vendedor |
+| Catalogo | Con sesion | Busca y pagina repuestos desde el backend |
+| Publicar | VENDEDOR | Publica repuestos para motos de 400 cc o mas |
+| Eliminar repuesto propio | VENDEDOR dueno | Elimina publicaciones propias sin compras activas |
+| Mis compras | COMPRADOR | Muestra historial, registra descarga y solicita reembolso |
+| Favoritos | COMPRADOR | Agrega, consulta y quita favoritos guardados |
+| Confirmar compras | ADMIN | Consulta pendientes y confirma el pago simulado |
+| Reportes | VENDEDOR o ADMIN | Muestra el ranking con limites de 3, 5 o 10 |
+| Buscar por moto | Con sesion | Busca por marca, modelo y ano; valida el cilindraje |
+| Vendedores | ADMIN | Verifica vendedores para categorias de alto riesgo |
+
+### Seguridad y reglas
+
+- Los guards controlan la navegacion por sesion y rol.
+- El interceptor agrega el JWT y atiende respuestas 401.
+- El backend valida token, roles, propiedad y reglas del negocio.
+- El reembolso exige compra COMPLETADA, dentro de cinco dias desde la compra, sin descarga y con motivo.
+- La descarga registra una fecha y bloquea el reembolso; no entrega un archivo real.
+- La confirmacion del pago y el reembolso son operaciones simuladas.
+- Las operaciones muestran avisos y bloquean sus botones mientras se envian.
+- H2 esta en memoria: recargar el navegador conserva los datos; reiniciar el backend los reinicia.
+
+### Ejecutar el frontend
+
+Desde la raiz del repositorio:
+
+    cd frontend
+    npm.cmd install
+    npm.cmd start
+
+Interfaz: http://localhost:4200
+Backend requerido: http://localhost:8080
+
+Compilacion de produccion desde la raiz:
+
+    npm.cmd --prefix frontend run build
+
+
+
 Aplicación Angular conectada al backend de Bikers Dreams. En la aplicación la marca se ve como "Sueños de motociclistas". Permite iniciar sesión con JWT, ver el catálogo de repuestos con búsqueda y paginación, publicar repuestos (vendedor), comprar y guardar favoritos (comprador). Usa Bootstrap 5 y es responsive.
 
 ### Cómo ejecutar el frontend
