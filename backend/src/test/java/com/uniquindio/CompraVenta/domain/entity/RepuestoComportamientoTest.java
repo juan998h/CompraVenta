@@ -146,10 +146,20 @@ class RepuestoComportamientoTest {
     }
 
     @Test
+    void noDebePermitirPublicarConModelosDeBajoCilindraje() {
+        // Act & Assert
+        assertThrows(ReglaDominioException.class, () -> repuestoCon(MT07, PCX));
+    }
+
+    @Test
     void deberiaDetectarSiTodosSusModelosSonDeAltoCilindraje() {
         // Act & Assert
         assertTrue(repuestoCon(MT07, CBR500).esDeAltoCilindraje());
-        assertFalse(repuestoCon(MT07, PCX).esDeAltoCilindraje());
+        Repuesto conMotoPequena = Repuesto.reconstruir("rep-2", "vendedor-1", "Pastillas de freno",
+                Precio.enPesos(new BigDecimal("150000")),
+                new Compatibilidad(List.of(MT07, PCX)),
+                new Garantia(6, "Garantia de fabrica"), false);
+        assertFalse(conMotoPequena.esDeAltoCilindraje());
     }
 
     @Test

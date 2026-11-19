@@ -114,6 +114,13 @@ public class Repuesto {
         if (restantes.isEmpty()) {
             throw new ReglaDominioException("Un repuesto debe declarar al menos un modelo compatible.");
         }
+        boolean todosAltoCilindraje = compatibilidad.modelosCompatibles().stream()
+                .allMatch(m -> m != null && m.cilindraje() != null
+                        && m.cilindraje().esAltoCilindraje());
+        if (!todosAltoCilindraje) {
+            throw new ReglaDominioException(
+                    "Solo se aceptan repuestos para motos de alto cilindraje (400 cc o mas).");
+        }
         this.compatibilidad = new Compatibilidad(restantes);
     }
 
@@ -191,6 +198,13 @@ public class Repuesto {
         if (compatibilidad == null || compatibilidad.modelosCompatibles() == null
                 || compatibilidad.modelosCompatibles().isEmpty()) {
             throw new ReglaDominioException("Un repuesto debe declarar al menos un modelo compatible.");
+        }
+        boolean todosAltoCilindraje = compatibilidad.modelosCompatibles().stream()
+                .allMatch(m -> m != null && m.cilindraje() != null
+                        && m.cilindraje().esAltoCilindraje());
+        if (!todosAltoCilindraje) {
+            throw new ReglaDominioException(
+                    "Solo se aceptan repuestos para motos de alto cilindraje (400 cc o mas).");
         }
     }
 

@@ -1,4 +1,4 @@
-﻿import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -132,7 +132,7 @@ import { RepuestoService } from '../../services/repuesto.service';
                 [class.is-invalid]="invalido('cilindrajeCc')"
               />
               <div class="invalid-feedback">
-                El cilindraje debe ser mayor a cero.
+                El cilindraje debe ser de 400 cc o mas (alto cilindraje).
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@ export class Publicar {
     marca: ['', Validators.required],
     version: ['', Validators.required],
     anio: [2024, [Validators.required, Validators.min(1900)]],
-    cilindrajeCc: [0, [Validators.required, Validators.min(1)]]
+    cilindrajeCc: [0, [Validators.required, Validators.min(400)]]
   });
 
   invalido(nombre: string): boolean {
