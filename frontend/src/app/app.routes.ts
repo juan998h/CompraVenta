@@ -3,6 +3,7 @@ import { Catalogo } from './components/catalogo/catalogo';
 import { Login } from './components/login/login';
 import { Publicar } from './components/publicar/publicar';
 import { Favoritos } from './components/favoritos/favoritos';
+import { Registro } from './components/registro/registro';
 import { MisCompras } from './components/compras/mis-compras';
 import { AdminCompras } from './components/compras/admin-compras';
 import { autenticadoGuard } from './guards/autenticado.guard';
@@ -33,5 +34,6 @@ export const routes: Routes = [
     component: MisCompras,
     canActivate: [autenticadoGuard, rolGuard('COMPRADOR')]
   },
+  { path: 'registro', component: Registro, canActivate: [invitadoGuard] },
   { path: '**', redirectTo: 'catalogo' }
 ];
