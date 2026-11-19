@@ -60,6 +60,12 @@ import { SesionService } from '../../services/sesion.service';
                 >Favoritos</a>
               </li>
             }
+                      @if (sesion.haySesionActiva() && sesion.tieneRol('COMPRADOR')) {
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/mis-compras"
+                   routerLinkActive="active">Mis compras</a>
+              </li>
+            }
           </ul>
 
           @if (sesion.haySesionActiva()) {
