@@ -3,6 +3,7 @@ import { Catalogo } from './components/catalogo/catalogo';
 import { Login } from './components/login/login';
 import { Publicar } from './components/publicar/publicar';
 import { Favoritos } from './components/favoritos/favoritos';
+import { MisCompras } from './components/compras/mis-compras';
 import { AdminCompras } from './components/compras/admin-compras';
 import { autenticadoGuard } from './guards/autenticado.guard';
 import { invitadoGuard } from './guards/invitado.guard';
@@ -26,6 +27,11 @@ export const routes: Routes = [
     path: 'admin/compras',
     component: AdminCompras,
     canActivate: [autenticadoGuard, rolGuard('ADMIN')]
+  },
+  {
+    path: 'mis-compras',
+    component: MisCompras,
+    canActivate: [autenticadoGuard, rolGuard('COMPRADOR')]
   },
   { path: '**', redirectTo: 'catalogo' }
 ];
