@@ -1,4 +1,4 @@
-﻿import { FavoritoService } from '../../services/favorito.service';
+import { FavoritoService } from '../../services/favorito.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AvisoService } from '../../services/aviso.service';
 import { CompraService } from '../../services/compra.service';
@@ -91,6 +91,17 @@ interface Consulta {
                     </span>
                   }
                 </div>
+                @if (sesion.tieneRol('VENDEDOR') && r.vendedorId === sesion.usuarioId()) {
+                  <div class="card-footer bg-transparent border-0 pb-3">
+                    <button
+                      class="btn btn-outline-danger w-100"
+                      [disabled]="eliminando() !== null"
+                      (click)="eliminar(r)"
+                    >
+                      {{ eliminando() === r.repuestoId ? 'Eliminando...' : 'Eliminar mi repuesto' }}
+                    </button>
+                  </div>
+                }
                 @if (sesion.tieneRol('COMPRADOR')) {
                   <div class="card-footer bg-transparent border-0 pb-3 d-flex gap-2">
                     <button
@@ -251,6 +262,25 @@ export class Catalogo {
     if (!img.src.endsWith('/img/default.jpg')) {
       img.src = '/img/default.jpg';
     }
+  }
+
+  eliminando = signal<string | null>(null);
+
+  eliminar(repuesto: RepuestoResponse): void {
+    if (this.eliminando() !== null) return;
+
+    this.eliminando.set(repuesto.repuestoId);
+    this.repuestos.eliminar(repuesto.repuestoId).subscribe({
+      next: () => {
+        this.eliminando.set(null);
+        this.avisos.exito(`Eliminaste "${repuesto.nombre}".`);
+        this.consulta.update((c) => ({ ...c, pagina: 0 }));
+      },
+      error: (error: HttpErrorResponse) => {
+        this.eliminando.set(null);
+        this.avisos.error(traducirError(error));
+      }
+    });
   }
 
   reintentar(): void {
