@@ -30,6 +30,13 @@ interface Consulta {
   selector: 'app-catalogo',
   imports: [CurrencyPipe],
   template: `
+    <div class="hero mb-4">
+      <div class="hero-texto">
+        <h1>Bikers Dreams</h1>
+        <p>Repuestos para motos de alto cilindraje</p>
+      </div>
+    </div>
+
     <h2 class="mb-3">Catalogo de repuestos</h2>
 
     <input
@@ -64,6 +71,12 @@ interface Consulta {
           @for (r of pag.contenido; track r.repuestoId) {
             <div class="col">
               <div class="card h-100 shadow-sm">
+                <img
+                  [src]="'/img/' + r.repuestoId + '.jpg'"
+                  class="card-img-top foto-repuesto"
+                  [alt]="r.nombre"
+                  (error)="fotoPorDefecto($event)"
+                />
                 <div class="card-body">
                   <h5 class="card-title">{{ r.nombre }}</h5>
                   <p class="fs-5 fw-bold mb-1">
@@ -231,6 +244,13 @@ export class Catalogo {
       error: (error: HttpErrorResponse) =>
         this.avisos.error(traducirError(error))
     });
+  }
+
+  fotoPorDefecto(evento: Event): void {
+    const img = evento.target as HTMLImageElement;
+    if (!img.src.endsWith('/img/default.jpg')) {
+      img.src = '/img/default.jpg';
+    }
   }
 
   reintentar(): void {
