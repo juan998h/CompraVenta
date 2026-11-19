@@ -66,6 +66,24 @@ import { SesionService } from '../../services/sesion.service';
                    routerLinkActive="active">Mis compras</a>
               </li>
             }
+                      @if (sesion.haySesionActiva()) {
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/compatibles"
+                   routerLinkActive="active">Buscar por moto</a>
+              </li>
+              @if (sesion.tieneRol('VENDEDOR') || sesion.tieneRol('ADMIN')) {
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/reportes"
+                     routerLinkActive="active">Reportes</a>
+                </li>
+              }
+              @if (sesion.tieneRol('ADMIN')) {
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/vendedores"
+                     routerLinkActive="active">Vendedores</a>
+                </li>
+              }
+            }
           </ul>
 
           @if (sesion.haySesionActiva()) {
