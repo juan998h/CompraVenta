@@ -35,6 +35,13 @@ public class CompraRepositoryJpa implements CompraRepository {
     }
 
     @Override
+    public List<Compra> obtenerPendientes() {
+        return dataRepository.findByEstadoOrderByFechaCompraAsc(EstadoCompra.PENDIENTE).stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public void guardar(Compra compra) {
         dataRepository.save(mapper.toEntity(compra));
     }

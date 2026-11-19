@@ -10,6 +10,7 @@ import com.uniquindio.CompraVenta.application.usecase.ConfirmarPagoUseCase;
 import com.uniquindio.CompraVenta.application.usecase.ConsultarHistorialDeComprasUseCase;
 import com.uniquindio.CompraVenta.application.usecase.ConsultarRepuestosMasVendidosUseCase;
 import com.uniquindio.CompraVenta.application.usecase.EliminarRepuestoUseCase;
+import com.uniquindio.CompraVenta.application.usecase.ListarComprasPendientesUseCase;
 import com.uniquindio.CompraVenta.application.usecase.ListarRepuestosUseCase;
 import com.uniquindio.CompraVenta.application.usecase.PublicarRepuestoUseCase;
 import com.uniquindio.CompraVenta.application.usecase.RealizarCompraUseCase;
@@ -93,6 +94,12 @@ public class CasosDeUsoConfig {
     public ConsultarHistorialDeComprasUseCase consultarHistorialDeComprasUseCase(
             CompraRepository compraRepository) {
         return new ConsultarHistorialDeComprasUseCase(compraRepository);
+    }
+
+    @Bean
+    public ListarComprasPendientesUseCase listarComprasPendientesUseCase(
+            CompraRepository compraRepository) {
+        return new ListarComprasPendientesUseCase(compraRepository);
     }
 
     // ---------- Consultas ----------

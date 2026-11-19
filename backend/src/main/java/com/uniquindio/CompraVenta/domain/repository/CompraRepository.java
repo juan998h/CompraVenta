@@ -14,6 +14,9 @@ public interface CompraRepository {
     /** Compras de un comprador, de la mas reciente a la mas antigua. */
     List<Compra> obtenerPorComprador(String compradorId);
 
+    /** Compras en estado PENDIENTE, de la mas antigua a la mas reciente. */
+    List<Compra> obtenerPendientes();
+
     List<ReembolsosPorComprador> compradoresConMasReembolsos(int limite);
 
     /** Ranking de repuestos por compras COMPLETADAS (une compras con repuestos). */

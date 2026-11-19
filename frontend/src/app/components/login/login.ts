@@ -1,4 +1,4 @@
-﻿import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { SesionService } from '../../services/sesion.service';
   template: `
     <div class="login-fondo">
       <div class="login-marca">
-        <h1>Sue&ntilde;os de motociclistas</h1>
+        <h1>Bikers Dreams</h1>
         <p>Repuestos para motos de alto cilindraje</p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SesionService } from '../../services/sesion.service';
 
@@ -40,6 +40,15 @@ import { SesionService } from '../../services/sesion.service';
                   routerLink="/publicar"
                   routerLinkActive="active"
                 >Publicar</a>
+              </li>
+            }
+            @if (sesion.haySesionActiva() && sesion.tieneRol('ADMIN')) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/admin/compras"
+                  routerLinkActive="active"
+                >Confirmar compras</a>
               </li>
             }
                       @if (sesion.haySesionActiva() && sesion.tieneRol('COMPRADOR')) {

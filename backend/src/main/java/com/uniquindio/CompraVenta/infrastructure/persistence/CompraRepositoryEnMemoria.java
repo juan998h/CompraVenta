@@ -23,6 +23,14 @@ public class CompraRepositoryEnMemoria implements CompraRepository {
     }
 
     @Override
+    public List<Compra> obtenerPendientes() {
+        return compras.values().stream()
+                .filter(c -> c.getEstado() == EstadoCompra.PENDIENTE)
+                .sorted(Comparator.comparing(Compra::getFechaCompra))
+                .toList();
+    }
+
+    @Override
     public void guardar(Compra compra) {
         compras.put(compra.getId(), compra);
     }
