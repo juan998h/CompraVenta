@@ -1,8 +1,9 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { Catalogo } from './components/catalogo/catalogo';
 import { Login } from './components/login/login';
 import { Publicar } from './components/publicar/publicar';
 import { Favoritos } from './components/favoritos/favoritos';
+import { AdminCompras } from './components/compras/admin-compras';
 import { autenticadoGuard } from './guards/autenticado.guard';
 import { invitadoGuard } from './guards/invitado.guard';
 import { rolGuard } from './guards/rol.guard';
@@ -20,6 +21,11 @@ export const routes: Routes = [
     path: 'favoritos',
     component: Favoritos,
     canActivate: [autenticadoGuard, rolGuard('COMPRADOR')]
+  },
+  {
+    path: 'admin/compras',
+    component: AdminCompras,
+    canActivate: [autenticadoGuard, rolGuard('ADMIN')]
   },
   { path: '**', redirectTo: 'catalogo' }
 ];

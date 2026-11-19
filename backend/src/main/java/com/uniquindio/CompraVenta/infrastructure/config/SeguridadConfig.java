@@ -67,6 +67,7 @@ public class SeguridadConfig {
                         // Solo el ADMIN verifica vendedores y confirma pagos
                         .requestMatchers(HttpMethod.PUT, "/api/vendedores/*/verificar").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/compras/*/confirmar").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/compras/pendientes").hasAuthority("ADMIN")
 
                         // Solo el COMPRADOR compra, ve su historial, descarga y pide reembolso
                         .requestMatchers(HttpMethod.POST, "/api/compras").hasAuthority("COMPRADOR")

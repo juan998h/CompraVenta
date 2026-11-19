@@ -1,4 +1,4 @@
-﻿import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -12,6 +12,10 @@ export class CompraService {
 
   comprar(datos: RealizarCompraRequest): Observable<CompraResponse> {
     return this.http.post<CompraResponse>(this.url, datos);
+  }
+
+  pendientes(): Observable<CompraResponse[]> {
+    return this.http.get<CompraResponse[]>(`${this.url}/pendientes`);
   }
 
   misCompras(): Observable<CompraResponse[]> {
