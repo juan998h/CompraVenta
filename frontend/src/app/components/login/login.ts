@@ -10,7 +10,13 @@ import { SesionService } from '../../services/sesion.service';
   selector: 'app-login',
   imports: [ReactiveFormsModule],
   template: `
-    <div class="row justify-content-center">
+    <div class="login-fondo">
+      <div class="login-marca">
+        <h1>Sue&ntilde;os de motociclistas</h1>
+        <p>Repuestos para motos de alto cilindraje</p>
+      </div>
+    </div>
+    <div class="row justify-content-center login-formulario">
       <div class="col-12 col-md-6 col-lg-4">
         <h2 class="mb-4 text-center">Iniciar sesion</h2>
 
