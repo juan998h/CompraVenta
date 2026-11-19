@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AvisoService } from '../../services/aviso.service';
 import { SesionService } from '../../services/sesion.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   template: `
     <div class="login-fondo">
       <div class="login-marca">
@@ -57,6 +57,10 @@ import { SesionService } from '../../services/sesion.service';
             {{ enviando() ? 'Entrando...' : 'Entrar' }}
           </button>
         </form>
+        <p class="text-center mt-3 mb-0">
+          Aun no tienes cuenta?
+          <a class="link-light" routerLink="/registro">Registrate</a>
+        </p>
       </div>
     </div>
   `
