@@ -1,3 +1,7 @@
+import { algunRolGuard } from './guards/algun-rol.guard';
+import { Reportes } from './components/reportes/reportes';
+import { Compatibles } from './components/compatibles/compatibles';
+import { VerificarVendedor } from './components/vendedores/verificar-vendedor';
 import { Routes } from '@angular/router';
 import { Catalogo } from './components/catalogo/catalogo';
 import { Login } from './components/login/login';
@@ -35,5 +39,20 @@ export const routes: Routes = [
     canActivate: [autenticadoGuard, rolGuard('COMPRADOR')]
   },
   { path: 'registro', component: Registro, canActivate: [invitadoGuard] },
+  {
+    path: 'reportes',
+    component: Reportes,
+    canActivate: [autenticadoGuard, algunRolGuard('VENDEDOR', 'ADMIN')]
+  },
+  {
+    path: 'compatibles',
+    component: Compatibles,
+    canActivate: [autenticadoGuard]
+  },
+  {
+    path: 'vendedores',
+    component: VerificarVendedor,
+    canActivate: [autenticadoGuard, rolGuard('ADMIN')]
+  },
   { path: '**', redirectTo: 'catalogo' }
 ];
